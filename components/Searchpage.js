@@ -1,10 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
+import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Searchpage from './components/Searchpage'
+import Searchbar from './Searchbar'
 export default function App() {
+    const [inputText, setInput] = useState("")
   return (
     <View style={styles.container}>
-      <Searchpage/>
+      <Searchbar/>
       <StatusBar style="auto" />
     </View>
   );
