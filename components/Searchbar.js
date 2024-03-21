@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, Image, Pressable } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Image, Pressable, FlatList, ScrollView } from 'react-native';
 
 export default function App() {
     const [inputText, setInput] = useState("")
@@ -13,7 +13,11 @@ export default function App() {
                 <Image style={styles.image} source={require('../assets/magnifying-glass-16.png')} />
             </Pressable>
         </View>
+        <View style={styles.searchresults}>
+        <ScrollView style={styles.scroll}>
         <Searchresults data={responsearray}/>
+        </ScrollView>
+        </View>
         </>
 
     );
@@ -29,8 +33,18 @@ export default function App() {
     }
     function Searchresults(props) {
         if(props.data.hits !== undefined){
-        imageUrl = props.data.hits[1].recipe.image
-        return <Image source={{ uri: imageUrl }} style={styles.image} />
+        temparray = []; 
+        props.data.hits.forEach((element, index) => {
+        imageUrl = element.recipe.image  
+        imgText = element.recipe.label  
+        temparray.push(
+        <View style={styles.SearchRow}>
+            <Image id={index} source={{ uri: imageUrl }} style={styles.image} />
+                <Text style={{paddingLeft: 20,height:"100%",width:"100%", alignContent:"center",justifyContent:"center", alignItems:"center", textAlignVertical: "center"}}>{imgText}</Text>
+        </View>
+        )
+        });
+        return temparray
         } else {
             return <></>
         }
@@ -38,6 +52,22 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+    SearchRow: {
+        flex: 1,
+        flexDirection: 'row',
+        paddingBottom: 20,
+        paddingTop: 20,
+        width: "100%",
+        textAlign: "center",
+    },
+    searchresults: {
+        height: "50%",
+        width: "100%"
+    },
+    scroll: {
+        height: "50%",
+        width: "100%"
+    },
     press: {
         flexBasis: '20%',
         alignItems: 'flex-end'
