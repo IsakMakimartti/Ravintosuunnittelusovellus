@@ -8,7 +8,7 @@ export default function MainMenu() {
     useEffect(() => {
       const fetchdata = async () => {
         try {
-            const response = await fetch("https://api.edamam.com/api/recipes/v2?app_id=7a7668fb&app_key=5dedd41ca0ac7b45881b37db8ae94423&type=public&q=Chicken");
+            const response = await fetch("https://api.edamam.com/api/recipes/v2?app_id=&app_key=&type=public&q=Chicken");
             const data = await response.json();
             setData(data);
             setLoading(false);
