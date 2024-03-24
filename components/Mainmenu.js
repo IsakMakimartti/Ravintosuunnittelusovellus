@@ -22,7 +22,6 @@ export default function MainMenu() {
     }, [])
     return (
       <SafeAreaView style={styles.container}>
-        <Banner/>
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
           { Loading ?
             <Text></Text> : <Foods array={Data}/>
@@ -47,15 +46,6 @@ function Foods(props){
 
   return temparray;
 }
-
-function Banner(){
-
-  return(
-    <View style={styles.bannerStyle}>
-      <Text style={styles.headerStyle}>RSS</Text>
-    </View>
-  )
-}
 const screenWidth = Dimensions.get('window').width;
 const imageWidth = screenWidth - 20;
 const styles = StyleSheet.create({
@@ -65,18 +55,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pineappleStyle: {
+    fontSize: 30,
+  },
   headerStyle: {
     textAlign: 'center',
     fontSize: 30,
+    paddingTop: 7,
   },
   bannerStyle: {
-    height: 55,
+    height: 65,
     backgroundColor: '#66bd7c',
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     zIndex: 1,
+    flexDirection: 'row',
   },
   image: {
     width: imageWidth,
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 55,
+    paddingTop: 65,
   },
   imageContainer: {
     position: 'relative',
