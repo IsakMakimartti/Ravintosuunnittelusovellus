@@ -14,12 +14,12 @@ export default function App() {
             </Pressable>
         </View>
         <View style={styles.buttoncontainer}>
-        <Button onPress={() => console.log("Hello")} labelStyle={{ fontSize: 18, textAlign: "center" }} style={styles.randombutton}>Give me ideas</Button>
+            <Button onPress={() => console.log("Hello")} labelStyle={{ fontSize: 18, textAlign: "center" }} style={styles.randombutton}>Give me ideas</Button>
         </View>        
         <View style={styles.searchresults}>
-        <ScrollView style={styles.scroll}>
-        <Searchresults data={responsearray}/>
-        </ScrollView>
+            <ScrollView style={styles.scroll}>
+                <Searchresults data={responsearray}/>
+            </ScrollView>
         </View>
         </>
 
