@@ -1,6 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, Dimensions, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, Dimensions, SafeAreaView, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import 'react-native-gesture-handler';
+
+const appId = process.env.APP_ID;
+const appKey = process.env.APP_KEY;
 
 export default function MainMenu() {
     const [Loading, setLoading] = useState(true)
@@ -8,7 +13,8 @@ export default function MainMenu() {
     useEffect(() => {
       const fetchdata = async () => {
         try {
-            const response = await fetch("https://api.edamam.com/api/recipes/v2?app_id=&app_key=&type=public&q=Chicken");
+            const fetchurl = "https://api.edamam.com/api/recipes/v2?app_id="+process.env.app_id+"&app_key="+process.env.app_KEY+"&type=public&q=Chicken"
+            const response = await fetch(fetchurl);
             const data = await response.json();
             setData(data);
             setLoading(false);
@@ -32,17 +38,25 @@ export default function MainMenu() {
     );
 }
 function Foods(props){
+  const navigation = useNavigation();
+
   var temparray = []; 
   for(let i = 0; i < 19; i++){
     var imageUrl = props.array.hits[i].recipe.image;
-    console.log(imageUrl);
+    const handlePress = () => {
+      const recipeURI = props.array.hits[i].recipe.uri
+      const id = recipeURI.split('_')[1];
+      navigation.navigate('Resepti', {id});
+    }
     temparray.push(
         <View key={i} style={styles.imageContainer}>
-            <Image source={{ uri: imageUrl }} style={styles.image} />
-            <Text style={styles.imageText}>{props.array.hits[i].recipe.label}</Text>
+            <TouchableOpacity onPress={handlePress}>
+              <Image source={{ uri: imageUrl }} style={styles.image}/>
+              <Text style={styles.imageText}>{props.array.hits[i].recipe.label}</Text>
+            </TouchableOpacity>
         </View>
     );
-}
+  }
 
   return temparray;
 }
