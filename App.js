@@ -1,10 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import Searchpage from './components/Searchpage'
+
+import Mainmenu  from './components/Mainmenu'
 export default function App() {
   return (
     <View style={styles.container}>
-      <Searchpage/>
+      <Mainmenu/>
       <StatusBar style="auto" />
     </View>
   );
