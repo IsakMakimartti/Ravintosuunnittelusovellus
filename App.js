@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-
+import Searchbar from './components/Searchpage'
 import Mainmenu  from './components/Mainmenu'
 export default function App() {
   return (
