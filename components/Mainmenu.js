@@ -4,8 +4,7 @@ import { StyleSheet, Text, View, Image, ScrollView, Dimensions, SafeAreaView, To
 import { useNavigation } from '@react-navigation/native';
 import 'react-native-gesture-handler';
 
-const appId = process.env.APP_ID;
-const appKey = process.env.APP_KEY;
+
 
 export default function MainMenu() {
     const [Loading, setLoading] = useState(true)
@@ -13,8 +12,9 @@ export default function MainMenu() {
     useEffect(() => {
       const fetchdata = async () => {
         try {
-            const fetchurl = "https://api.edamam.com/api/recipes/v2?app_id="+process.env.app_id+"&app_key="+process.env.app_KEY+"&type=public&q=Chicken"
+            var fetchurl = "https://api.edamam.com/api/recipes/v2?app_id="+process.env.app_id+"&app_key="+process.env.app_KEY+"&type=public&q=Chicken"
             const response = await fetch(fetchurl);
+            console.log()
             const data = await response.json();
             setData(data);
             setLoading(false);

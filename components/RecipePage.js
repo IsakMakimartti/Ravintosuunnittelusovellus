@@ -11,7 +11,7 @@ export default function RecipePage({ route }) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const fetchurl = "https://api.edamam.com/api/recipes/v2/"+id+"?type=public&app_id="+process.env.app_id+"&app_key="+process.env.app_KEY
+                var fetchurl = "https://api.edamam.com/api/recipes/v2/"+id+"?type=public&app_id="+process.env.app_id+"&app_key="+process.env.app_KEY
                 console.log(fetchurl)
                 const response = await fetch(fetchurl);
                 const fetchedData = await response.json();
