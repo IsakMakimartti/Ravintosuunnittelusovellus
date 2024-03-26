@@ -10,34 +10,34 @@ export default function Searchbar() {
     return (
 <KeyboardAvoidingView style={{flex: 1, flexDirection: "column", alignItems: "center",justifyContent: "center"}}>
         <View style={styles.row}>
-            <TextInput value={inputText} onChangeText={text => setInput(text)} style={styles.input} placeholder='Search...'></TextInput>
+            <TextInput ononSubmitEditing={APIsearch} value={inputText} onChangeText={text => setInput(text.replace(/\s/g, ''))} style={styles.input} placeholder='Search...'></TextInput>
             <Pressable onPress={APIsearch} style={styles.press}>
                 <Image style={styles.image} source={require('../assets/magnifying-glass-16.png')} />
             </Pressable>
         </View>
-        <View style={styles.buttoncontainer}>
-            <Button onPress={() => Random()} labelStyle={{ fontSize: 18, textAlign: "center" }} style={styles.randombutton}>Give me ideas</Button>
-        </View> 
-        <ScrollView nestedScrollEnabled={true} style={styles.scroll}>
-            <View style={styles.RandomResultContainer}>
-                <RandomResultElement data={randomarray}/>  
-            </View>    
+        { responsearray.length === undefined ?
+        <ScrollView style={styles.scroll}>
         <View style={styles.searchresults}>
                 <Searchresults data={responsearray}/>
         </View>
-        </ScrollView>
+        </ScrollView> :  <></>
+         }
+        <View style={styles.buttoncontainer}>
+            <Button onPress={() => Random()} labelStyle={{ fontSize: 18, textAlign: "center" }} style={styles.randombutton}>Give me ideas</Button>
+        </View> 
+            <View style={styles.RandomResultContainer}>
+                <RandomResultElement data={randomarray}/>  
+            </View>    
     </KeyboardAvoidingView>
 
     );
     async function APIsearch(){
-        console.log(responsearray)
         var response = ""; 
         url = "https://api.edamam.com/api/recipes/v2?type=public&q=" + inputText + "&app_id="+ process.env.app_id + "&app_key=" +process.env.app_KEY
         await fetch(url)
         .then(async res => response = await res.json())
         .catch(error => console.log(error))
         setArray(response)
-        console.log(responsearray)
     }
     async function Random() {
        var random = Math.floor(1 + Math.random()*(18-1))
@@ -60,8 +60,8 @@ export default function Searchbar() {
             return (
                 <Pressable style={styles.randompress} onPress={()=> console.log(props.data.label)}>
                     <View style={styles.randomcontainer}>
+                    <Image source={{ uri: image }} style={styles.Randomimageoffood}/>
                         <Text style={styles.randomHeader}>{text}</Text>
-                        <Image source={{ uri: image }} style={styles.Randomimageoffood}/>
                     </View>
                 </Pressable>
             )
@@ -106,7 +106,6 @@ width: 20,
         flex: 1,
     },
     randompress: {
-     backgroundColor: "#ccc",
     },
     randomHeader: {
     fontSize: 20,
@@ -114,8 +113,7 @@ width: 20,
     randomcontainer: {
         alignItems: "center",
         flex: 1,
-        flexBasis: "20%",
-        flexDirection: "column",
+        flexDirection: "Column",
         
     },
     buttoncontainer:{
@@ -132,12 +130,11 @@ width: 20,
         borderWidth: 1,
         flex: 1,
         flexDirection: 'row',
-        paddingBottom: 20,
-        paddingTop: 20,
         width: "100%",
         textAlign: "center",
     },
     scroll: {
+        flex: 1,
         height: "20%",
         width: "100%"
     },
@@ -167,8 +164,8 @@ width: 20,
         height: 80,
     },
     Randomimageoffood: {
-        width: 200,
-        height: 160,
+        width: 150,
+        height: 120,
     },
     container: {
         flex: 1,
@@ -176,4 +173,7 @@ width: 20,
         alignItems: 'center',
         justifyContent: 'center',
       },
+      searchresults: {
+
+      }
 });
