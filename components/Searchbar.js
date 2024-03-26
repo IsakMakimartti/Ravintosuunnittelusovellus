@@ -1,14 +1,15 @@
 
 import { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, Image, Pressable, ScrollView } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Image, Pressable, ScrollView, SafeAreaView,StatusBar, useWindowDimensions } from 'react-native';
 import { Button } from 'react-native-paper';
 import { cuisineType } from "../data/random.json"
 export default function App() {
+    const { screenwidth, screenheight } = useWindowDimensions();
     const [inputText, setInput] = useState("")
     const [responsearray, setArray] = useState([undefined])
     const [randomarray, setRanArray] = useState([undefined])
     return (
-<>
+<SafeAreaView style={{flex: 1, flexDirection: "column", alignItems: "center",justifyContent: "center"}}>
         <View style={styles.row}>
             <TextInput value={inputText} onChangeText={text => setInput(text)} style={styles.input} placeholder='Search...'></TextInput>
             <Pressable onPress={APIsearch} style={styles.press}>
@@ -18,17 +19,15 @@ export default function App() {
         <View style={styles.buttoncontainer}>
             <Button onPress={() => Random()} labelStyle={{ fontSize: 18, textAlign: "center" }} style={styles.randombutton}>Give me ideas</Button>
         </View> 
-        <ScrollView>
+        <ScrollView nestedScrollEnabled={true} style={styles.scroll}>
             <View style={styles.RandomResultContainer}>
                 <RandomResultElement data={randomarray}/>  
             </View>    
-            <ScrollView style={styles.scroll}>
         <View style={styles.searchresults}>
                 <Searchresults data={responsearray}/>
         </View>
         </ScrollView>
-        </ScrollView>
-        </>
+    </SafeAreaView>
 
     );
     async function APIsearch(){
@@ -59,7 +58,6 @@ export default function App() {
             temparray = []; 
             var image = props.data.images.REGULAR.url
             var text = props.data.label
-            console.log(image)
             return (
                 <Pressable style={styles.randompress} onPress={()=> console.log(props.data.label)}>
                     <View style={styles.randomcontainer}>
@@ -73,11 +71,10 @@ export default function App() {
     function Searchresults(props) {
         if(props.data.hits !== undefined){
         temparray = []; 
-        console.log(props.data.hits[1].recipe.images.REGULAR.url)
         props.data.hits.forEach((element, index) => {
+        if(element.recipe.images.REGULAR.url && element.recipe.label ) {
         imageUrl = element.recipe.images.REGULAR.url
         imgText = element.recipe.label 
-
         temparray.push(
         <Pressable onPress={()=>console.log(element._links.self.href)}>
         <View style={styles.SearchRow}>
@@ -86,6 +83,11 @@ export default function App() {
         </View>
         </Pressable>
         )
+        } else {
+            temparray.push(
+                <Text>Error</Text>
+            )
+        }
         });
         return temparray
         } else {
@@ -95,7 +97,14 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+    safearea: {
+width: 20,
+    },
+    scrollArea: {
+        flex: 1,
+    },
     RandomResultContainer: {
+        flex: 1,
     },
     randompress: {
      backgroundColor: "#ccc",
@@ -106,8 +115,7 @@ const styles = StyleSheet.create({
     randomcontainer: {
         alignItems: "center",
         flex: 1,
-        flexBasis: "10%",
-        flexGrow: 0,
+        flexBasis: "20%",
         flexDirection: "column",
         
     },
@@ -129,16 +137,13 @@ const styles = StyleSheet.create({
         width: "100%",
         textAlign: "center",
     },
-    searchresults: {
-        height: "50%",
-        width: "100%"
-    },
     scroll: {
-        height: "50%",
+        height: "20%",
         width: "100%"
     },
     press: {
         flexBasis: '20%',
+        height: "20%",
         alignItems: 'flex-end'
     },
     row: {
@@ -164,5 +169,11 @@ const styles = StyleSheet.create({
     Randomimageoffood: {
         width: 200,
         height: 160,
-    }
+    },
+    container: {
+        flex: 1,
+        backgroundColor: '#a5c4ad',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
 });
