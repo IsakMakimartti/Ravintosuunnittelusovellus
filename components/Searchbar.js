@@ -1,15 +1,14 @@
 
 import { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, Image, Pressable, ScrollView, SafeAreaView,StatusBar, useWindowDimensions } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Image, Pressable, ScrollView, SafeAreaView, useWindowDimensions,KeyboardAvoidingView } from 'react-native';
 import { Button } from 'react-native-paper';
 import { cuisineType } from "../data/random.json"
-export default function App() {
-    const { screenwidth, screenheight } = useWindowDimensions();
+export default function Searchbar() {
     const [inputText, setInput] = useState("")
     const [responsearray, setArray] = useState([undefined])
     const [randomarray, setRanArray] = useState([undefined])
     return (
-<SafeAreaView style={{flex: 1, flexDirection: "column", alignItems: "center",justifyContent: "center"}}>
+<KeyboardAvoidingView style={{flex: 1, flexDirection: "column", alignItems: "center",justifyContent: "center"}}>
         <View style={styles.row}>
             <TextInput value={inputText} onChangeText={text => setInput(text)} style={styles.input} placeholder='Search...'></TextInput>
             <Pressable onPress={APIsearch} style={styles.press}>
@@ -27,7 +26,7 @@ export default function App() {
                 <Searchresults data={responsearray}/>
         </View>
         </ScrollView>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
 
     );
     async function APIsearch(){
@@ -45,7 +44,7 @@ export default function App() {
        var cusine = cuisineType[random]
        var response = ""; 
        var url = "https://api.edamam.com/api/recipes/v2?type=public&" + "&app_id=" + process.env.app_id + "&app_key=+ " + process.env.app_KEY +"&cuisineType="+ cusine +"&random=true"
-       console.log(url)
+       console.log(process.env.app_id)
        await fetch(url)
        .then(async res => response = await res.json()) 
        .catch(error => console.log(error))
@@ -120,7 +119,8 @@ width: 20,
         
     },
     buttoncontainer:{
-    height: "15%"
+        flex: 1,
+        maxHeight: "15%"
     },
     randombutton: {
         backgroundColor: "#74ff00",
