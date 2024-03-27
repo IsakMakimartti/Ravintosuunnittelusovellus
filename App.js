@@ -16,6 +16,9 @@ export default function App() {
       screenOptions={{
         headerTintColor: 'black',
         headerStyle: {backgroundColor: '#c5ee7d'},
+        headerTitleStyle: {
+          fontSize: 40
+        },
         headerTitleAlign: 'center',
         title: "RSS",
       }}
