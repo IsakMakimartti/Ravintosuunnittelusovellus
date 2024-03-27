@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import Searchpage from './components/Searchpage'
 import Mainmenu  from './components/Mainmenu'
+import RecipePage  from './components/RecipePage'
 import Footer from './components/Footer'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -16,6 +17,10 @@ export default function App() {
           name="Home"
           component={Mainmenu}
         />
+        <Stack.Screen
+          name="Recipe"
+          component={RecipePage}
+          />
       <Stack.Screen
           name="Search"
           component={Searchpage}

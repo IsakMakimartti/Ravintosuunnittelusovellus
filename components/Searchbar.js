@@ -44,7 +44,7 @@ export default function Searchbar() {
        var cusine = cuisineType[random]
        var response = ""; 
        var url = "https://api.edamam.com/api/recipes/v2?type=public&" + "&app_id=" + process.env.app_id + "&app_key=+ " + process.env.app_KEY +"&cuisineType="+ cusine +"&random=true"
-       console.log(process.env.app_id)
+       console.log(url)
        await fetch(url)
        .then(async res => response = await res.json()) 
        .catch(error => console.log(error))
