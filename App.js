@@ -56,9 +56,4 @@ const styles = StyleSheet.create({
     flex:1,
     backgroundColor: '#fff',
   },
-  header: {
-    textAlign: 'center',
-    color: 'black',
-    backgroundColor: '#74ff00',
-  },
 });
