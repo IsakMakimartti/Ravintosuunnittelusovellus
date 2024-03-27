@@ -12,7 +12,14 @@ export default function App() {
   return (
     <View style={styles.container}>
     <NavigationContainer>
-    <Stack.Navigator>
+    <Stack.Navigator 
+      screenOptions={{
+        headerTintColor: 'black',
+        headerStyle: {backgroundColor: '#c5ee7d'},
+        headerTitleAlign: 'center',
+        title: "RSS",
+      }}
+    >
     <Stack.Screen
           name="Home"
           component={Mainmenu}
@@ -20,10 +27,18 @@ export default function App() {
         <Stack.Screen
           name="Recipe"
           component={RecipePage}
+          options={({ route }) => ({
+            title: "Recipe", 
+            headerTitle: route.RecipePage, 
+          })}
           />
       <Stack.Screen
           name="Search"
           component={Searchpage}
+          options={({ route }) => ({
+            title: "Search", 
+            headerTitle: route.Searchpage, 
+          })}
         />
       </Stack.Navigator>
          <Footer/>
@@ -37,5 +52,10 @@ const styles = StyleSheet.create({
   container: {
     flex:1,
     backgroundColor: '#fff',
+  },
+  header: {
+    textAlign: 'center',
+    color: 'black',
+    backgroundColor: '#74ff00',
   },
 });
