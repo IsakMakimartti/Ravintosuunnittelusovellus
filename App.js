@@ -1,29 +1,36 @@
-import React from 'react';
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View } from 'react-native';
+import Searchpage from './components/Searchpage'
+import Mainmenu  from './components/Mainmenu'
+import Footer from './components/Footer'
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import MainMenu from './components/Mainmenu';
-import RecipePage from './components/RecipePage';
-import { StyleSheet, Text, View, Image, ScrollView, Dimensions, SafeAreaView, TouchableOpacity } from 'react-native';
-import 'react-native-gesture-handler';
 
-const Stack = createStackNavigator();
-
+const Stack = createNativeStackNavigator();
 export default function App() {
   return (
+    <View style={styles.container}>
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="MainMenu">
-        <Stack.Screen name="Etusivu" component={MainMenu} />
-        <Stack.Screen name="Resepti" component={RecipePage} />
+    <Stack.Navigator>
+    <Stack.Screen
+          name="Home"
+          component={Mainmenu}
+        />
+      <Stack.Screen
+          name="Search"
+          component={Searchpage}
+        />
       </Stack.Navigator>
-    </NavigationContainer>
+         <Footer/>
+      </NavigationContainer>
+      <StatusBar style="auto" />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex:1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });

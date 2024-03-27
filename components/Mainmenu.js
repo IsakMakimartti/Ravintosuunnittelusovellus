@@ -15,6 +15,7 @@ export default function MainMenu() {
             var fetchurl = "https://api.edamam.com/api/recipes/v2?app_id="+process.env.app_id+"&app_key="+process.env.app_KEY+"&type=public&q=Chicken"
             const response = await fetch(fetchurl);
             console.log()
+          
             const data = await response.json();
             setData(data);
             setLoading(false);
@@ -63,7 +64,7 @@ function Foods(props){
 const screenWidth = Dimensions.get('window').width;
 const imageWidth = screenWidth - 20;
 const styles = StyleSheet.create({
-  container: {
+  container: {  
     flex: 1,
     backgroundColor: '#a5c4ad',
     alignItems: 'center',
