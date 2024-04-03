@@ -1,33 +1,49 @@
 import { Text, View, TextInput, StyleSheet, Pressable, Image } from 'react-native';
 import { useState } from 'react';
 import IngredientAdder from "./IngredientAdder"
+var arrayb = []
+var arrayb2 = []
 export default function Recipebuilder() {
     const [recipeName, setName] = useState("")
     const [recipeInstructions, setInstructions] = useState("")
+    handlePress = (array,array2) => {
+        arrayb = array
+        arrayb2 = array2
+        console.log(arrayb)
+        console.log(arrayb2)
+    }
+    handleFinnish = () => {
+     console.log("Handeled")
+     console.log(recipeInstructions)
+     console.log(recipeName)
+     console.log(arrayb)
+     console.log(arrayb2)
+    }
+    
     return (
         <View style={styles.container}>
             <View style={styles.padding}>
                 <View style={styles.inputcontainer}>
-                    <TextInput onChange={text => setName(text)} style={styles.inputstyle} value={recipeName} placeholder='Recipe name here!'></TextInput>
+                    <TextInput onChangeText={text => setName(text)} style={styles.inputstyle} value={recipeName} placeholder='Recipe name here!'></TextInput>
                 </View>
             </View>
             <View style={styles.padding}>
-                <IngredientAdder />
+                <IngredientAdder functioncall={handlePress}/>
             </View>
             <View style={styles.padding}>
                 <View style={styles.instructions}>
-                    <TextInput onChange={text => setInstructions(text)} style={styles.instructionsinput} value={recipeInstructions} placeholder='Write instructions here!'></TextInput>
+                    <TextInput onChangeText={text => setInstructions(text)} style={styles.instructionsinput} value={recipeInstructions} placeholder='Write instructions here!'></TextInput>
                 </View>
             </View>
             <View style={styles.addedcontainers}>
-                <Pressable style={styles.pressable} onPress={() => console.log("Recipe Finished")}>
+                <Pressable style={styles.pressable} onPress={() => handleFinnish()}>
                     <Text>Finnish Recipe</Text>
                 </Pressable>
             </View>
         </View>
     );
-
 }
+
 const styles = StyleSheet.create({
     container: {
     flex: 1,

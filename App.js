@@ -44,7 +44,7 @@ export default function App() {
             headerTitle: route.Searchpage, 
           })}
         />
-         <Stack.Screen
+               <Stack.Screen
           name="Recipebuilder"
           component={Recipebuilder}
           options={({ route }) => ({
