@@ -47,7 +47,7 @@ export default function RecipePage({ route }) {
                 />
                 <View style={styles.ingredientBox}>
                 <AddRecipeButton onPress={handleButtonPress} />
-                <Text style={styles.subLabel}>Ingredients:</Text>
+                <Text style={styles.subLabel}>Ingredients</Text>
                     {data.recipe.ingredientLines.map((ingredient, index) => (
                 <Text key={index} style={styles.ingredient}>{ingredient}</Text>
                     ))}
@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 20,
         marginTop: 10,
+        textAlign: 'center'
     },
     ingredientBox:{
         width: imageWidth,
