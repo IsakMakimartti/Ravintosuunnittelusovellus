@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import Searchpage from './components/Searchpage'
 import Mainmenu  from './components/Mainmenu'
+import Recipebuilder from './components/Recipebuilder';
 import RecipePage  from './components/RecipePage'
 import Footer from './components/Footer'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -41,6 +42,14 @@ export default function App() {
           options={({ route }) => ({
             title: "Search", 
             headerTitle: route.Searchpage, 
+          })}
+        />
+               <Stack.Screen
+          name="Recipebuilder"
+          component={Recipebuilder}
+          options={({ route }) => ({
+            title: "Recipe Builder", 
+            headerTitle: route.Recipebuilder, 
           })}
         />
       </Stack.Navigator>

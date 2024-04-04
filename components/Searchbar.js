@@ -75,9 +75,9 @@ export default function Searchbar() {
         imageUrl = element.recipe.images.REGULAR.url
         imgText = element.recipe.label 
         temparray.push(
-        <Pressable onPress={()=>console.log(element._links.self.href)}>
+        <Pressable key={index} onPress={()=>console.log(element._links.self.href)}>
         <View style={styles.SearchRow}>
-        <Image id={index} source={{ uri: imageUrl }} style={styles.imageoffood} />
+        <Image source={{ uri: imageUrl }} style={styles.imageoffood} />
         <Text style={{paddingLeft: 20,height:"80%",width:"80%", alignContent:"center",justifyContent:"center", alignItems:"center", textAlignVertical: "center"}}>{imgText}</Text>
         </View>
         </Pressable>
