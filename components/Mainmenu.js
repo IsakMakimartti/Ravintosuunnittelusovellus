@@ -77,7 +77,7 @@ const imageWidth = screenWidth - 20;
 const styles = StyleSheet.create({
   container: {  
     flex: 1,
-    backgroundColor: '#a5c4ad',
+    backgroundColor: '#f1f1f1',
     alignItems: 'center',
     justifyContent: 'center',
   },

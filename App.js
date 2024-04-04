@@ -5,6 +5,7 @@ import Mainmenu from './components/Mainmenu'
 import Recipebuilder from './components/Recipebuilder';
 import RecipePage from './components/RecipePage'
 import Footer from './components/Footer'
+import Calendar from './components/Calendar';
 import CalorieCalculator from './components/CalorieCalculator';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -29,6 +30,14 @@ export default function App() {
             name="Home"
             component={Mainmenu}
           />
+        <Stack.Screen
+          name="Calendar"
+          component={Calendar}
+          options={({ route }) => ({
+            title: "Calendar", 
+            headerTitle: route.Calendar, 
+          })}
+        />
           <Stack.Screen
             name="Recipe"
             component={RecipePage}
