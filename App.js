@@ -30,22 +30,6 @@ export default function App() {
             name="Home"
             component={Mainmenu}
           />
-      <Stack.Screen
-          name="Search"
-          component={Searchpage}
-          options={({ route }) => ({
-            title: "Search", 
-            headerTitle: route.Searchpage, 
-          })}
-        />
-               <Stack.Screen
-          name="Recipebuilder"
-          component={Recipebuilder}
-          options={({ route }) => ({
-            title: "Recipe Builder", 
-            headerTitle: route.Recipebuilder, 
-          })}
-        />
         <Stack.Screen
           name="Calendar"
           component={Calendar}
@@ -54,8 +38,6 @@ export default function App() {
             headerTitle: route.Calendar, 
           })}
         />
-      </Stack.Navigator>
-         <Footer/>
           <Stack.Screen
             name="Recipe"
             component={RecipePage}
