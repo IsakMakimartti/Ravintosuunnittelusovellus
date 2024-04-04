@@ -14,7 +14,7 @@ export default function Footer() {
       <Pressable style={styles.image} onPress={()=> navigation.navigate('Recipebuilder')}>
       <Image style={styles.image} source={require('../assets/plus-icon.png')}></Image>
       </Pressable>
-      <Pressable style={styles.image}>
+      <Pressable style={styles.image} onPress={()=> navigation.navigate('Calendar')}>
       <Image style={styles.image} source={require('../assets/caldendar-icon.png')}></Image>
       </Pressable>
       <Pressable style={styles.image} onPress={()=> navigation.navigate('Search')}>

@@ -88,7 +88,7 @@ const imageWidth = screenWidth - 20;
 const styles = StyleSheet.create({
     button: {
         padding: 10,
-        backgroundColor: '#91dba2',
+        backgroundColor: '#c5ee7d',
         borderColor: 'black',
         borderWidth: 1,
         borderRadius: 5,
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: '#a5c4ad',
+        backgroundColor: '#f1f1f1',
     },
     scrollViewContent: {
         flexGrow: 1,
