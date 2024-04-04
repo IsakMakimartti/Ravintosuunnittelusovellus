@@ -5,6 +5,7 @@ import Mainmenu  from './components/Mainmenu'
 import Recipebuilder from './components/Recipebuilder';
 import RecipePage  from './components/RecipePage'
 import Footer from './components/Footer'
+import Calendar from './components/Calendar';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -50,6 +51,14 @@ export default function App() {
           options={({ route }) => ({
             title: "Recipe Builder", 
             headerTitle: route.Recipebuilder, 
+          })}
+        />
+        <Stack.Screen
+          name="Calendar"
+          component={Calendar}
+          options={({ route }) => ({
+            title: "Calendar", 
+            headerTitle: route.Calendar, 
           })}
         />
       </Stack.Navigator>
