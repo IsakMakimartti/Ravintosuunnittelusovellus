@@ -12,7 +12,7 @@ export default function Searchbar() {
     return (
 <KeyboardAvoidingView style={{flex: 1, flexDirection: "column", alignItems: "center",justifyContent: "center"}}>
         <View style={styles.row}>
-            <TextInput ononSubmitEditing={APIsearch} value={inputText} onChangeText={text => setInput(text.replace(/\s/g, ''))} style={styles.input} placeholder='Search...'></TextInput>
+            <TextInput ononSubmitEditing={APIsearch} value={inputText} onChangeText={text => setInput(text.replace())} style={styles.input} placeholder='Search...'></TextInput>
             <Pressable onPress={APIsearch} style={styles.press}>
                 <Image style={styles.image} source={require('../assets/magnifying-glass-16.png')} />
             </Pressable>
@@ -35,6 +35,7 @@ export default function Searchbar() {
     );
     async function APIsearch(){
         var response = ""; 
+        var parsedinput = inputText.replace(" ", "%20")
         url = "https://api.edamam.com/api/recipes/v2?type=public&q=" + inputText + "&app_id="+ process.env.app_id + "&app_key=" +process.env.app_KEY
         await fetch(url)
         .then(async res => response = await res.json())

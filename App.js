@@ -26,6 +26,14 @@ export default function App() {
             title: "RSS",
           }}
         >
+            <Stack.Screen
+            name="Search"
+            component={Searchpage}
+            options={({ route }) => ({
+              title: "Search",
+              headerTitle: route.Searchpage,
+            })}
+          />
           <Stack.Screen
             name="Home"
             component={Mainmenu}
@@ -44,14 +52,6 @@ export default function App() {
             options={({ route }) => ({
               title: "Recipe",
               headerTitle: route.RecipePage,
-            })}
-          />
-          <Stack.Screen
-            name="Search"
-            component={Searchpage}
-            options={({ route }) => ({
-              title: "Search",
-              headerTitle: route.Searchpage,
             })}
           />
           <Stack.Screen

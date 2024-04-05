@@ -19,7 +19,7 @@ export default function Recipebuilder(props) {
                                 <Text style={styles.headerpop}>ADD an Ingredient</Text>
                                 <TextInput placeholder="Ingredient field" onChangeText={text => setingredient(text)} value={ingredientinput} style={styles.modalinput}></TextInput>
                                 <TextInput placeholder="Amount" onChangeText={text => setamount(text)} value={amountinput} style={styles.modalinput}></TextInput>
-                                <View style={{flex: 1, width: "100%", flexDirection: "row", justifyContent: "space-between"}}>
+                                <View style={styles.buttoncontainer}>
                                 <Pressable style={styles.modalpressable} onPress={addIngredient}>
                                     <Text style={{padding: 20, fontSize: 20,backgroundColor: "#c5ee7d", textAlign: "center"}}> Add </Text>
                                 </Pressable>
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     fontSize: 20, 
     textAlign: "center",
-    backgroundColor: "#cccc"
+    backgroundColor: "#f1f1"
     },
     modalpressable: {
     height: 70,
@@ -76,6 +76,9 @@ const styles = StyleSheet.create({
     popupcontent: {
         backgroundColor: "rgba(255,255,255,1)",
         width: "100%",
+    },
+    buttoncontainer: {
+        flex: 1, width: "100%", flexDirection: "row", justifyContent: "space-between", backgroundColor: "#f1f1"
     },
     headerpop: {
         backgroundColor: "#c5ee7d",
