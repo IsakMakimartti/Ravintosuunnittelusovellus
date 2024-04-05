@@ -34,8 +34,6 @@ export default function MainMenu() {
       const randomMeal = Math.floor(Math.random()* mealType.length)
       const cusine = cusineType[randomCusine];
       const meal = mealType[randomMeal];
-      console.log(cusine);
-      console.log(meal);
 
     useEffect(() => {
       const fetchdata = async () => {
