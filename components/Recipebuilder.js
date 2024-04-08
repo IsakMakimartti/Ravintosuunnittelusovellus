@@ -23,6 +23,7 @@ export default function Recipebuilder() {
      setName("")
      setInstructions("")
      setKey(Math.random())
+     setJsonArray([])
     }
     
     return (

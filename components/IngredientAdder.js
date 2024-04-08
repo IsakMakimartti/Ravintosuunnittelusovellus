@@ -82,15 +82,15 @@ export default function Recipebuilder(props) {
         var jsonData = {
             "ingredient" : 
                 {
-                 "name" : [
+                 "name" : 
                   ingredientinput
-                 ],
-                 "amount" : [
+                 ,
+                 "amount" : 
                   amountinput
-                 ],
-                 "measurement" : [
+                 ,
+                 "measurement" : 
                   amountmes
-                 ]
+                 
                 }
         }
         ingredientsjson.push(jsonData)
@@ -100,15 +100,15 @@ export default function Recipebuilder(props) {
         var jsonData = {
             "ingredient" : 
                 {
-                 "name" : [
+                 "name" : 
                   ingredientinput
-                 ],
-                 "amount" : [
+                 ,
+                 "amount" : 
                   amountinput
-                 ],
-                 "measurement" : [
+                 ,
+                 "measurement" : 
                   amountmes
-                 ]
+                 
                 }
         }
         ingredientsjson[index] = jsonData;
