@@ -24,6 +24,14 @@ export default function App() {
         title: "RSS",
       }}
     >
+              <Stack.Screen
+          name="Recipebuilder"
+          component={Recipebuilder}
+          options={({ route }) => ({
+            title: "Recipe Builder", 
+            headerTitle: route.Recipebuilder, 
+          })}
+        />
     <Stack.Screen
           name="Home"
           component={Mainmenu}
@@ -44,14 +52,7 @@ export default function App() {
             headerTitle: route.Searchpage, 
           })}
         />
-               <Stack.Screen
-          name="Recipebuilder"
-          component={Recipebuilder}
-          options={({ route }) => ({
-            title: "Recipe Builder", 
-            headerTitle: route.Recipebuilder, 
-          })}
-        />
+
       </Stack.Navigator>
          <Footer/>
       </NavigationContainer>

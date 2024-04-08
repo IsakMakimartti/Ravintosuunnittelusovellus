@@ -1,26 +1,29 @@
-import { Text, View, TextInput, StyleSheet, Pressable, Image } from 'react-native';
+import { Text, View, TextInput, StyleSheet, Pressable, Image, ScrollView,Modal } from 'react-native';
 import { useState } from 'react';
 import IngredientAdder from "./IngredientAdder"
-var arrayb = []
-var arrayb2 = []
+
 export default function Recipebuilder() {
+    const [IngredientJsonArray, setJsonArray] = useState([])
     const [recipeName, setName] = useState("")
     const [recipeInstructions, setInstructions] = useState("")
-    handlePress = (array,array2) => {
-        arrayb = array
-        arrayb2 = array2
-        console.log(arrayb)
-        console.log(arrayb2)
+    const [key, setKey] = useState(Math.random());
+    const [modal, setModal] = useState(true)
+    handlePress = (array) => {
+        IngredientJsonArray.push(array)
+        console.log(IngredientJsonArray)
     }
     handleFinnish = () => {
      console.log("Handeled")
      console.log(recipeInstructions)
      console.log(recipeName)
-     console.log(arrayb)
-     console.log(arrayb2)
+     console.log(IngredientJsonArray)
+     setName("")
+     setInstructions("")
+     setKey(Math.random())
     }
     
     return (
+        <ScrollView>
         <View style={styles.container}>
             <View style={styles.padding}>
                 <View style={styles.inputcontainer}>
@@ -28,23 +31,54 @@ export default function Recipebuilder() {
                 </View>
             </View>
             <View style={styles.padding}>
-                <IngredientAdder functioncall={handlePress}/>
+                <IngredientAdder functioncall={handlePress} key={key}/>
             </View>
             <View style={styles.padding}>
                 <View style={styles.instructions}>
-                    <TextInput onChangeText={text => setInstructions(text)} style={styles.instructionsinput} value={recipeInstructions} placeholder='Write instructions here!'></TextInput>
+                    <TextInput onChangeText={text => setInstructions(text)} style={styles.instructionsinput} value={recipeInstructions} numberOfLines={4} multiline={true} allowFontScaling={true} placeholder='Write instructions here!'></TextInput>
                 </View>
             </View>
             <View style={styles.addedcontainers}>
-                <Pressable style={styles.pressable} onPress={() => handleFinnish()}>
+                <Pressable style={styles.pressable} onPress={() => setModal(!modal)}>
                     <Text>Finnish Recipe</Text>
                 </Pressable>
+                <Modal visible={modal} onRequestClose={() => setModal(!modal)} transparent={true} animationType={"slide"}>
+                    <View style={styles.modal}>
+                        <View style={styles.query}>
+                            <Text style={{fontSize: 30, padding: 20}}>Complete Recipe?</Text>
+                            <View style={styles.querybuttons}>
+                                <Pressable onPress={() => handleFinnish() + setModal(!modal)} style={{padding: 5, backgroundColor: "#7CFC00", alignItems:"center"}}>
+                                    <Text style={{fontSize: 20}}>Accept</Text>
+                                </Pressable>
+                                <Pressable style={{padding: 5, backgroundColor: "#FF5733", alignItems:"center"}}>
+                                    <Text onPress={() => setModal(!modal)} style={{fontSize: 20}}>Cancel</Text>
+                                </Pressable>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
             </View>
         </View>
+        </ScrollView>
     );
 }
-
 const styles = StyleSheet.create({
+    querybuttons: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width: "60%",
+    },
+    query: {
+        alignItems: "center",
+        backgroundColor: "#c5ee7d",
+        width: "100%"
+    },
+    modal: {
+    flex: 1, 
+    justifyContent: "center",
+    width: "100%",
+    alignItems: "center"
+    },
     container: {
     flex: 1,
     },
@@ -57,6 +91,8 @@ const styles = StyleSheet.create({
         borderWidth: 0.5,
     },
     instructionsinput: {
+        flex: 1,
+        flexWrap: "wrap",
         paddingBottom: 20,
         paddingTop: 20,
         textAlign: "center",
