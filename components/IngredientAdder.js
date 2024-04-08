@@ -12,7 +12,7 @@ export default function Recipebuilder(props) {
         { key: '2', value: 'g' },
         { key: '3', value: 'kg' },
         { key: '4', value: 'oz' },
-        { key: '5', value: 'fluid ounce' },
+        { key: '5', value: 'floz' },
         { key: '6', value: 'cup' },
         { key: '7', value: 'teaspoon' },
         { key: '8', value: 'pint' },
@@ -32,7 +32,7 @@ export default function Recipebuilder(props) {
                     <Modal visible={openmodal} onRequestClose={() => setopen(!openmodal)} transparent={true} animationType={"slide"}>
                         <View style={styles.popup}>
                             <View style={styles.popupcontent}>
-                                <Text style={styles.headerpop}>ADD an Ingredient</Text>
+                                <Text style={styles.headerpop}>Add or edit an Ingredient</Text>
                                 <TextInput placeholder="Ingredient field" onChangeText={text => setingredient(text)} value={ingredientinput} style={styles.modalinput}></TextInput>
                                 <SelectList
                                     setSelected={(val) => setamountmes(val)}
@@ -41,7 +41,7 @@ export default function Recipebuilder(props) {
                                     placeholder='Select measurement!'
                                     save="value"
                                 />
-                                <TextInput placeholder="Amount" onChangeText={text => setamount(text)} value={amountinput} style={styles.modalinput}></TextInput>
+                            <TextInput placeholder="Amount" onChangeText={text => setamount(text)} value={amountinput} style={styles.modalinput}></TextInput>
                                 <View style={{ flex: 1, width: "100%", flexDirection: "row", justifyContent: "space-between" }}>
                                     <Pressable style={styles.modalpressable} onPress={addIngredient}>
                                         <Text style={{ padding: 20, fontSize: 20, backgroundColor: "#c5ee7d", textAlign: "center" }}> Add </Text>
@@ -61,7 +61,23 @@ export default function Recipebuilder(props) {
         </View>
 
     );
+    function jsondelete(num) {
+    setopen(true)
+    delete ingredientsjson[num]
+    setopen(false)
+    props.functioncall(ingredientsjson)
+    setIngredientjson(ingredientsjson)
+    }
     function addIngredient() {
+    var pass = true; 
+    var index = -1; 
+    ingredientsjson.forEach((value, inx) => {
+        if(String(value.ingredient.name) === ingredientinput) {
+            pass = false;
+            index = inx
+        }
+    }) 
+    if(pass){
         setopen(!openmodal)
         var jsonData = {
             "ingredient" : 
@@ -79,19 +95,42 @@ export default function Recipebuilder(props) {
         }
         ingredientsjson.push(jsonData)
         props.functioncall(ingredientsjson)
+    } else {
+       if(index !== -1){
+        var jsonData = {
+            "ingredient" : 
+                {
+                 "name" : [
+                  ingredientinput
+                 ],
+                 "amount" : [
+                  amountinput
+                 ],
+                 "measurement" : [
+                  amountmes
+                 ]
+                }
+        }
+        ingredientsjson[index] = jsonData;
+       }
+       setopen(!openmodal)
+    }
+    setingredient("")
+    setamount("")
+    setamountmes("")
     }
     function IngredientUI(props) {
         var temparray = [];
         props.data.forEach((value, index) => {
             temparray.push(
-                <View style={styles.ingredient} key={"Ingredient" + index}>
+                <Pressable onLongPress={() => jsondelete(index)} style={styles.ingredient} key={"Ingredient" + index}>
                     <Text style={styles.ingredienttext}>
                    {value.ingredient.name}
                     </Text>
                     <Text style={styles.amounttext}>
                         {value.ingredient.amount} {value.ingredient.measurement}
                     </Text>
-                </View>
+                </Pressable>
             )
         })
         return temparray
@@ -138,7 +177,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
     },
     xpress: {
-        backgroundColor: "	rgba(255, 0, 0, 0.1)",
+        backgroundColor: "rgba(255, 0, 0, 0.1)",
         width: "8%",
     },
     x: {
@@ -146,9 +185,8 @@ const styles = StyleSheet.create({
         height: 30,
     },
     amounttext: {
-        fontSize: 40,
-        height: 60,
-        width: "30%"
+        fontSize: 20,
+        width: "25%"
     },
     ingredient: {
         flex: 1,
@@ -163,10 +201,8 @@ const styles = StyleSheet.create({
         borderColor: "#000000"
     },
     ingredienttext: {
-        fontSize: 40,
+        fontSize: 30,
         width: "70%",
-        height: 60,
-        textAlign: "center"
     },
     padding: {
         paddingBottom: 20,

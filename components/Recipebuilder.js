@@ -9,8 +9,11 @@ export default function Recipebuilder() {
     const [key, setKey] = useState(Math.random());
     const [modal, setModal] = useState(false)
     handlePress = (array) => {
-        IngredientJsonArray.push(array)
-        console.log(IngredientJsonArray)
+        setJsonArray(array)
+        IngredientJsonArray.forEach((value, index)  => {
+            console.log(index+1)
+            console.log(value.ingredient)
+        })
     }
     handleFinnish = () => {
      console.log("Handeled")
