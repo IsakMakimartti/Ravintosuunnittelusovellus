@@ -7,7 +7,7 @@ export default function Recipebuilder() {
     const [recipeName, setName] = useState("")
     const [recipeInstructions, setInstructions] = useState("")
     const [key, setKey] = useState(Math.random());
-    const [modal, setModal] = useState(true)
+    const [modal, setModal] = useState(false)
     handlePress = (array) => {
         IngredientJsonArray.push(array)
         console.log(IngredientJsonArray)
