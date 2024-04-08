@@ -3,7 +3,9 @@ import { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, Image, Pressable, ScrollView, SafeAreaView, useWindowDimensions,KeyboardAvoidingView } from 'react-native';
 import { Button } from 'react-native-paper';
 import { cuisineType } from "../data/random.json"
+import { useNavigation } from '@react-navigation/native';
 export default function Searchbar() {
+    const navigation = useNavigation();
     const [inputText, setInput] = useState("")
     const [responsearray, setArray] = useState([undefined])
     const [randomarray, setRanArray] = useState([undefined])
@@ -58,7 +60,7 @@ export default function Searchbar() {
             var image = props.data.images.REGULAR.url
             var text = props.data.label
             return (
-                <Pressable style={styles.randompress} onPress={()=> console.log(props.data.label)}>
+                <Pressable style={styles.randompress} onPress={()=> recipesend(props.data.uri.split('_')[1], navigation)}>
                     <View style={styles.randomcontainer}>
                     <Image source={{ uri: image }} style={styles.Randomimageoffood}/>
                         <Text style={styles.randomHeader}>{text}</Text>
@@ -75,7 +77,7 @@ export default function Searchbar() {
         imageUrl = element.recipe.images.REGULAR.url
         imgText = element.recipe.label 
         temparray.push(
-        <Pressable key={index} onPress={()=>console.log(element._links.self.href)}>
+        <Pressable key={index} onPress={()=> recipesend(element.recipe.uri.split('_')[1], navigation)}>
         <View style={styles.SearchRow}>
         <Image source={{ uri: imageUrl }} style={styles.imageoffood} />
         <Text style={{paddingLeft: 20,height:"80%",width:"80%", alignContent:"center",justifyContent:"center", alignItems:"center", textAlignVertical: "center"}}>{imgText}</Text>
@@ -93,6 +95,10 @@ export default function Searchbar() {
             return <></>
         }
     }
+}
+function recipesend(id, nav){
+console.log(id)
+nav.navigate("Recipe", {id})
 }
 
 const styles = StyleSheet.create({
@@ -121,7 +127,7 @@ width: 20,
         maxHeight: "15%"
     },
     randombutton: {
-        backgroundColor: "#74ff00",
+        backgroundColor: "#c5ee7d",
         height: 40,
         top: 30,
     },
