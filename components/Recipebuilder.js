@@ -1,50 +1,101 @@
-import { Text, View, TextInput, StyleSheet, Pressable, Image } from 'react-native';
+import { Text, View, TextInput, StyleSheet, Pressable, Image, ScrollView,Modal } from 'react-native';
 import { useState } from 'react';
 import IngredientAdder from "./IngredientAdder"
-var arrayb = []
-var arrayb2 = []
+import { firestore,collection,addDoc,userrecipes, query, onSnapshot } from '../firebase/Config';
 export default function Recipebuilder() {
+    const [IngredientJsonArray, setJsonArray] = useState([])
     const [recipeName, setName] = useState("")
+    const [username, setUsername] = useState("")
     const [recipeInstructions, setInstructions] = useState("")
-    handlePress = (array,array2) => {
-        arrayb = array
-        arrayb2 = array2
-        console.log(arrayb)
-        console.log(arrayb2)
+    const [key, setKey] = useState(Math.random());
+    const [modal, setModal] = useState(false)
+    handlePress = (array) => {
+        setJsonArray(array)
+        IngredientJsonArray.forEach((value, index)  => {
+            console.log(index+1)
+            console.log(value.ingredient)
+        })
     }
-    handleFinnish = () => {
+    handleFinnish = async() => {
      console.log("Handeled")
      console.log(recipeInstructions)
      console.log(recipeName)
-     console.log(arrayb)
-     console.log(arrayb2)
+     console.log(IngredientJsonArray)
+     setName("")
+     setUsername("")
+     setInstructions("")
+     setJsonArray([])
+     const save = async() => {
+        const docRef = await addDoc(collection(firestore, userrecipes),{
+          username: username,
+          name: recipeName,
+          ingredients: IngredientJsonArray,
+          instructions: recipeInstructions
+        }).catch(error => console.log(error))
+        console.log('Message saved')
+      }
+      await save()
+      setKey(Math.random())
     }
     
     return (
+        <ScrollView>
         <View style={styles.container}>
             <View style={styles.padding}>
                 <View style={styles.inputcontainer}>
+                    <TextInput onChangeText={text => setUsername(text)} style={styles.inputstyle} value={username} placeholder='Username here!'></TextInput>
                     <TextInput onChangeText={text => setName(text)} style={styles.inputstyle} value={recipeName} placeholder='Recipe name here!'></TextInput>
                 </View>
             </View>
             <View style={styles.padding}>
-                <IngredientAdder functioncall={handlePress}/>
+                <IngredientAdder functioncall={handlePress} key={key}/>
             </View>
             <View style={styles.padding}>
                 <View style={styles.instructions}>
-                    <TextInput onChangeText={text => setInstructions(text)} style={styles.instructionsinput} value={recipeInstructions} placeholder='Write instructions here!'></TextInput>
+                    <TextInput onChangeText={text => setInstructions(text)} style={styles.instructionsinput} value={recipeInstructions} numberOfLines={4} multiline={true} allowFontScaling={true} placeholder='Write instructions here!'></TextInput>
                 </View>
             </View>
             <View style={styles.addedcontainers}>
-                <Pressable style={styles.pressable} onPress={() => handleFinnish()}>
+                <Pressable style={styles.pressable} onPress={() => setModal(!modal)}>
                     <Text>Finnish Recipe</Text>
                 </Pressable>
+                <Modal visible={modal} onRequestClose={() => setModal(!modal)} transparent={true} animationType={"slide"}>
+                    <View style={styles.modal}>
+                        <View style={styles.query}>
+                            <Text style={{fontSize: 30, padding: 20}}>Complete Recipe?</Text>
+                            <View style={styles.querybuttons}>
+                                <Pressable onPress={() => handleFinnish() + setModal(!modal)} style={{padding: 5, backgroundColor: "#7CFC00", alignItems:"center"}}>
+                                    <Text style={{fontSize: 20}}>Accept</Text>
+                                </Pressable>
+                                <Pressable style={{padding: 5, backgroundColor: "#FF5733", alignItems:"center"}}>
+                                    <Text onPress={() => setModal(!modal)} style={{fontSize: 20}}>Cancel</Text>
+                                </Pressable>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
             </View>
         </View>
+        </ScrollView>
     );
 }
-
 const styles = StyleSheet.create({
+    querybuttons: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width: "60%",
+    },
+    query: {
+        alignItems: "center",
+        backgroundColor: "#c5ee7d",
+        width: "100%"
+    },
+    modal: {
+    flex: 1, 
+    justifyContent: "center",
+    width: "100%",
+    alignItems: "center"
+    },
     container: {
     flex: 1,
     },
@@ -57,6 +108,8 @@ const styles = StyleSheet.create({
         borderWidth: 0.5,
     },
     instructionsinput: {
+        flex: 1,
+        flexWrap: "wrap",
         paddingBottom: 20,
         paddingTop: 20,
         textAlign: "center",
@@ -85,7 +138,8 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
         paddingTop: 20,
         fontSize: 30,
-        textAlign: "center"
+        textAlign: "center", 
+        borderWidth: 0.3,
     },
     image: {
         width: 50,

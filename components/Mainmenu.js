@@ -10,15 +10,30 @@ export default function MainMenu() {
     const [Loading, setLoading] = useState(true)
     const [Data, setData] = useState([])
 
-    const cusineType = ["American", "Asian", "British", "Caribbean", "Central%Europe", "Chinese", "Eastern%Europe", "French", "Indian", "Italian", "Japanese", "Kosher", "Mediterranien", "Mexican", "Middle%Eastern", "Nordic", "South%American", "South%East%Asian"];
+    const cusineType = ["American",
+    "Asian",
+    "British",
+    "Caribbean",
+    "Central%Europe",
+    "Chinese",
+    "Eastern%Europe",
+    "French",
+    "Indian",
+    "Italian",
+    "Japanese",
+    "Kosher",
+    "Mediterranean",
+    "Mexican",
+    "Middle%Eastern",
+    "Nordic",
+    "South%American",
+    "South%East%Asian"];
     const mealType = ["Breakfast", "Dinner", "Lunch", "Snack", "Teatime"];
 
       const randomCusine = Math.floor(Math.random() * cusineType.length);
       const randomMeal = Math.floor(Math.random()* mealType.length)
       const cusine = cusineType[randomCusine];
       const meal = mealType[randomMeal];
-      console.log(cusine);
-      console.log(meal);
 
     useEffect(() => {
       const fetchdata = async () => {
@@ -42,7 +57,7 @@ export default function MainMenu() {
       <SafeAreaView style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
           { Loading ?
-            <Text></Text> : <Foods array={Data}/>
+            <Text>Loading</Text> : <Foods array={Data}/>
           }
           <StatusBar style="auto" />
         </ScrollView>
