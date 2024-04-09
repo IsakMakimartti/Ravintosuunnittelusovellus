@@ -63,10 +63,10 @@ export default function App() {
             })}
           />
           <Stack.Screen
-            name="CalorieCalculator"
+            name="Calculator"
             component={CalorieCalculator}
             options={({ route }) => ({
-              title: "CalorieCalculator",
+              title: "Calculator",
               headerTitle: route.CalorieCalculator,
             })}
           />

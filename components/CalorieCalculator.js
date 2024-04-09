@@ -105,16 +105,20 @@ const styles = StyleSheet.create({
         marginHorizontal: 8
     },
     headerItem: {
-        backgroundColor: '#D3D3D3',
+        backgroundColor: '#F1F1F1',
         padding: 20,
         marginBottom: 32,
-        marginHorizontal: 0
+        marginHorizontal: 0,
+        borderBottomWidth: 2,
+        borderColor: '#000000'
     },
     item: {
-        backgroundColor: '#D3D3D3',
+        backgroundColor: '#F1F1F1',
         padding: 20,
         marginVertical: 4,
-        marginHorizontal: 0
+        marginHorizontal: 0,
+        borderBottomWidth: 2,
+        borderColor: '#000000'
     },
     title: {
         fontSize: 32,
@@ -125,12 +129,14 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         padding: 8,
         marginHorizontal: 16,
+        backgroundColor: '#c5ee7d',
     },
     buttonCancel: {
         marginTop: 110,
         marginBottom: 16,
         padding: 8,
         marginHorizontal: 16,
+        backgroundColor: '#c5ee7d'
     },
     searchbar: {
         marginTop: 16
