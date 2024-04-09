@@ -1,10 +1,11 @@
 import { Text, View, TextInput, StyleSheet, Pressable, Image, ScrollView,Modal } from 'react-native';
 import { useState } from 'react';
 import IngredientAdder from "./IngredientAdder"
-
+import { firestore,collection,addDoc,userrecipes, query, onSnapshot } from '../firebase/Config';
 export default function Recipebuilder() {
     const [IngredientJsonArray, setJsonArray] = useState([])
     const [recipeName, setName] = useState("")
+    const [username, setUsername] = useState("")
     const [recipeInstructions, setInstructions] = useState("")
     const [key, setKey] = useState(Math.random());
     const [modal, setModal] = useState(false)
@@ -15,15 +16,26 @@ export default function Recipebuilder() {
             console.log(value.ingredient)
         })
     }
-    handleFinnish = () => {
+    handleFinnish = async() => {
      console.log("Handeled")
      console.log(recipeInstructions)
      console.log(recipeName)
      console.log(IngredientJsonArray)
      setName("")
+     setUsername("")
      setInstructions("")
-     setKey(Math.random())
      setJsonArray([])
+     const save = async() => {
+        const docRef = await addDoc(collection(firestore, userrecipes),{
+          username: username,
+          name: recipeName,
+          ingredients: IngredientJsonArray,
+          instructions: recipeInstructions
+        }).catch(error => console.log(error))
+        console.log('Message saved')
+      }
+      await save()
+      setKey(Math.random())
     }
     
     return (
@@ -31,6 +43,7 @@ export default function Recipebuilder() {
         <View style={styles.container}>
             <View style={styles.padding}>
                 <View style={styles.inputcontainer}>
+                    <TextInput onChangeText={text => setUsername(text)} style={styles.inputstyle} value={username} placeholder='Username here!'></TextInput>
                     <TextInput onChangeText={text => setName(text)} style={styles.inputstyle} value={recipeName} placeholder='Recipe name here!'></TextInput>
                 </View>
             </View>
@@ -125,7 +138,8 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
         paddingTop: 20,
         fontSize: 30,
-        textAlign: "center"
+        textAlign: "center", 
+        borderWidth: 0.3,
     },
     image: {
         width: 50,
