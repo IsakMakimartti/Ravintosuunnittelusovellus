@@ -70,9 +70,9 @@ export default function RecipePage({ route }) {
 
                         if (quantity && measure && food !== '<unit>') {
                             displayIngredient += quantity;
-                        if (measure !== '<unit>') {
-                            displayIngredient += ` ${measure}`;
-                        }
+                            if (measure !== '<unit>') {
+                                displayIngredient += ` ${measure}`;
+                            }
                             displayIngredient += ` ${food}`;
                         }
 
@@ -80,7 +80,7 @@ export default function RecipePage({ route }) {
                             <TouchableOpacity
                                 key={index}
                                 onPress={() => handleIngredientPress(quantity, measure, food)}
-                                >
+                            >
                                 <Text style={styles.ingredient}>{displayIngredient}</Text>
                             </TouchableOpacity>
                         );
@@ -115,18 +115,59 @@ export default function RecipePage({ route }) {
 }
 
 const AddRecipeButton = ({ onPress }) => {
-    const [saved, setSaved] = useState(false);
-    const label = saved ? 'Remove recipe' : 'Add recipe';
+    const [active, setActive] = useState(false);
+    const [modalButtonsVisible, setModalButtonsVisible] = useState(false);
+    const label = active ? 'Active' : 'Add';
 
     const handlePress = () => {
-        setSaved(!saved);
+        setActive(!active);
+        setModalButtonsVisible(!modalButtonsVisible)
         onPress();
     };
 
     return (
-        <TouchableOpacity onPress={handlePress} style={styles.button}>
-            <Text style={{ textAlign: 'center' }}>{label}</Text>
-        </TouchableOpacity>
+        <View>
+            <TouchableOpacity onPress={handlePress} style={styles.button}>
+                <Text style={{ textAlign: 'center' }}>{label}</Text>
+            </TouchableOpacity>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalButtonsVisible}
+                onRequestClose={() => {
+                    Alert.alert('ModalButtons has been closed.');
+                    setModalButtonsVisible(!modalButtonsVisible);
+                }}
+            >
+                <View style={styles.modalButtonsContainer}>
+                    <ModalButtons onPress={handlePress} />
+                </View>
+            </Modal>
+        </View>
+    );
+};
+
+const ModalButtons = ({ onPress }) => {
+    const label1 = 'Calculator'
+    const label2 = 'Calendar'
+    const label3 = 'Cancel'
+
+    const handlePress = () => {
+        onPress();
+    };
+
+    return (
+        <View style={styles.modalButtonsView}>
+            <TouchableOpacity onPress={handlePress} style={[styles.button, styles.modalButtons]}>
+                <Text style={{ textAlign: 'center' }}>{label1}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handlePress} style={[styles.button, styles.modalButtons]}>
+                <Text style={{ textAlign: 'center' }}>{label2}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handlePress} style={[styles.button, styles.modalButtons]}>
+                <Text style={{ textAlign: 'center' }}>{label3}</Text>
+            </TouchableOpacity>
+        </View>
     );
 };
 
@@ -192,4 +233,28 @@ const styles = StyleSheet.create({
         color: 'blue',
         textAlign: 'center',
     },
+    modalButtonsContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalButtonsView: {
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'stretch',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        borderWidth: 1,
+        borderColor: 'black'
+    },
+    modalButtons: {
+        marginVertical: 8
+    }
 });
