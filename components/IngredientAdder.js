@@ -158,6 +158,9 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(255,255,255,1)",
         width: "100%",
     },
+    buttoncontainer: {
+        flex: 1, width: "100%", flexDirection: "row", justifyContent: "space-between", backgroundColor: "#f1f1"
+    },
     headerpop: {
         backgroundColor: "#c5ee7d",
         textAlign: "center",
