@@ -47,14 +47,6 @@ export default function App() {
             })}
           />
           <Stack.Screen
-            name="Search"
-            component={Searchpage}
-            options={({ route }) => ({
-              title: "Search",
-              headerTitle: route.Searchpage,
-            })}
-          />
-          <Stack.Screen
             name="Recipebuilder"
             component={Recipebuilder}
             options={({ route }) => ({
@@ -63,11 +55,19 @@ export default function App() {
             })}
           />
           <Stack.Screen
-            name="CalorieCalculator"
+            name="Calculator"
             component={CalorieCalculator}
             options={({ route }) => ({
-              title: "CalorieCalculator",
+              title: "Calculator",
               headerTitle: route.CalorieCalculator,
+            })}
+          />
+              <Stack.Screen
+            name="Search"
+            component={Searchpage}
+            options={({ route }) => ({
+              title: "Search",
+              headerTitle: route.Searchpage,
             })}
           />
         </Stack.Navigator>
