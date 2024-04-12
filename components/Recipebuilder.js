@@ -9,7 +9,9 @@ export default function Recipebuilder() {
     const [recipeInstructions, setInstructions] = useState("")
     const [key, setKey] = useState(Math.random());
     const [modal, setModal] = useState(false)
+    const [accepeted, setAccepted] = useState(true)
     handlePress = (array) => {
+        console.log(array)
         setJsonArray(array)
         IngredientJsonArray.forEach((value, index)  => {
             console.log(index+1)
@@ -17,25 +19,34 @@ export default function Recipebuilder() {
         })
     }
     handleFinnish = async() => {
-     console.log("Handeled")
-     console.log(recipeInstructions)
-     console.log(recipeName)
-     console.log(IngredientJsonArray)
+     if(recipeInstructions.length>1 && recipeName.length>1 && IngredientJsonArray.length>0){
+        setModal(false)
+     var keywordarray = []
+     keywordarray = keywordarray.concat(recipeName.split(" "))
+     IngredientJsonArray.forEach(data => {
+        keywordarray.push(data.ingredient.name)
+     })
+     keywordarray.push(recipeName)
      setName("")
      setUsername("")
      setInstructions("")
      setJsonArray([])
+     setKey(Math.random())
      const save = async() => {
         const docRef = await addDoc(collection(firestore, userrecipes),{
           username: username,
           name: recipeName,
           ingredients: IngredientJsonArray,
-          instructions: recipeInstructions
+          instructions: recipeInstructions,
+          keywords: keywordarray,
         }).catch(error => console.log(error))
         console.log('Message saved')
       }
       await save()
-      setKey(Math.random())
+    } else {
+      setAccepted(false)
+      setTimeout(() => setModal(false) + setAccepted(true), 4000)
+    }
     }
     
     return (
@@ -61,10 +72,11 @@ export default function Recipebuilder() {
                 </Pressable>
                 <Modal visible={modal} onRequestClose={() => setModal(!modal)} transparent={true} animationType={"slide"}>
                     <View style={styles.modal}>
+                        { accepeted ? 
                         <View style={styles.query}>
-                            <Text style={{fontSize: 30, padding: 20}}>Complete Recipe?</Text>
+                            <Text style={{fontSize: 30, padding: 20}}>Complete Recipe?</Text> 
                             <View style={styles.querybuttons}>
-                                <Pressable onPress={() => handleFinnish() + setModal(!modal)} style={{padding: 5, backgroundColor: "#7CFC00", alignItems:"center"}}>
+                                <Pressable onPress={() => handleFinnish()} style={{padding: 5, backgroundColor: "#7CFC00", alignItems:"center"}}>
                                     <Text style={{fontSize: 20}}>Accept</Text>
                                 </Pressable>
                                 <Pressable style={{padding: 5, backgroundColor: "#FF5733", alignItems:"center"}}>
@@ -72,6 +84,8 @@ export default function Recipebuilder() {
                                 </Pressable>
                             </View>
                         </View>
+                        : <View style={styles.query}><Text style={{fontSize: 20, padding: 40, color: "#FF0000"}}>Please check the that all the fields contain something!</Text></View>
+}
                     </View>
                 </Modal>
             </View>
