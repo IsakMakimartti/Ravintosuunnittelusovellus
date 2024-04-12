@@ -49,6 +49,7 @@ export default function Searchbar() {
                     <Text style={{fontSize:20, marginBottom: 30}}>{modaldata.username}</Text>
                     <Text style={{fontSize:15 , marginTop: 10, marginBottom: 30}}>{modaldata.instructions}</Text>
                     <MapArray/>
+                    <Pressable style={{width: "100%", alignItems: "center", marginTop: 20,backgroundColor: "rgba(255,0,0,0.7)" }} onPress={()=>ismodal(!modal)}><Text>Close</Text></Pressable>
                 </View>
             </View>
         </Modal>    
