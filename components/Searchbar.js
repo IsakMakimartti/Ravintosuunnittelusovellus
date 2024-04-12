@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { getDocs,firestore,collection,addDoc,userrecipes, query, onSnapshot,where } from '../firebase/Config';
-import { StyleSheet, Text, TextInput, View, Image, Pressable, ScrollView, SafeAreaView, useWindowDimensions,KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Image, Pressable, ScrollView, SafeAreaView, useWindowDimensions,KeyboardAvoidingView, Modal } from 'react-native';
 import { Button } from 'react-native-paper';
 import { cuisineType } from "../data/random.json"
 import { useNavigation } from '@react-navigation/native';
@@ -11,9 +11,11 @@ export default function Searchbar() {
     const [responsearray, setArray] = useState([undefined])
     const [randomarray, setRanArray] = useState([undefined])
     const [userarray, setuserarray] = useState([undefined])
+    const [modal, ismodal] = useState(false)
+    const [modaldata, setdata] = useState([])
     return (
         <>
-        <View style={styles.row}>
+        <View style={styles.row}>   
             <TextInput ononSubmitEditing={APIsearch} value={inputText} onChangeText={text => setInput(text.replace())} style={styles.input} placeholder='Search...'></TextInput>
             <Pressable onPress={APIsearch} style={styles.press}>
                 <Image style={styles.image} source={require('../assets/magnifying-glass-16.png')} />
@@ -26,14 +28,50 @@ export default function Searchbar() {
         </View>
         </ScrollView> :  <></>
          } 
+         {modal ? <ModalComponent/> :<></>
+}
+         <>
         <View style={styles.buttoncontainer}>
             <Button onPress={() => Random()} labelStyle={{ fontSize: 18, textAlign: "center" }} style={styles.randombutton}>Give me ideas</Button>
         </View> 
             <View style={styles.RandomResultContainer}>
                 <RandomResultElement data={randomarray}/>  
             </View> 
+           </>
 </>
     );
+    function ModalComponent() {
+        return  (
+        <Modal visible={modal} onRequestClose={() => ismodal(!modal)} transparent={true} animationType={"slide"}>
+            <View style={{flex: 1, alignContent: "center", alignSelf: "center", justifyContent: "center"}}>
+                <View style={styles.modal}>
+                    <Text style={{fontSize:30, marginBottom: 10}}>{modaldata.name}</Text>
+                    <Text style={{fontSize:20, marginBottom: 30}}>{modaldata.username}</Text>
+                    <Text style={{fontSize:15 , marginTop: 10, marginBottom: 30}}>{modaldata.instructions}</Text>
+                    <MapArray/>
+                </View>
+            </View>
+        </Modal>    
+        );
+    }
+    function setModalData(array){
+       setdata(array)
+       array.ingredients.forEach(value => {
+        console.log(value.ingredient.name)
+       })
+       ismodal(true)
+
+    }
+function MapArray(){
+    var temparray = []
+    modaldata.ingredients.forEach(value => {
+        console.log(value.ingredient.name)
+        temparray.push(
+            <View style={{borderWidth:0.3,width: "100%", alignItems: "center", padding: 10 }}><Text style={{fontSize:15}}>{value.ingredient.name} {value.ingredient.amount}{value.ingredient.measurement}</Text></View>
+        )
+    })
+    return temparray
+}
 async function APIsearch(){
 const citiesRef = collection(firestore, userrecipes);
 const q = query(citiesRef, where("keywords", 'array-contains', inputText))
@@ -104,12 +142,14 @@ setuserarray(temparray)
             )
         }
         });
-        userarray.forEach( element => {
+        userarray.forEach( (element,index) => {
             temparray.push(
+                <Pressable key={index+"user"} onPress={()=> setModalData(element)}>
                <View style={styles.SearchRow}>
                <Image source={require("../assets/user.png")} style={styles.imageoffood} />
                <Text style={{paddingLeft: 20,height:"80%",width:"80%", alignContent:"center",justifyContent:"center", alignItems:"center", textAlignVertical: "center"}}>{element.name}</Text>
                </View> 
+               </Pressable>
                )
        })
         return temparray
@@ -124,6 +164,12 @@ nav.navigate("Recipe", {id})
 }
 
 const styles = StyleSheet.create({
+    modal: {
+   backgroundColor: "#c5ee7d",
+   padding: 20,
+   borderWidth: 0.5, 
+   alignItems: "center"
+    },
     safearea: {
 width: 20,
     },

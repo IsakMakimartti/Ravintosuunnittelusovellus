@@ -27,6 +27,7 @@ export default function Recipebuilder() {
         keywordarray.push(data.ingredient.name)
      })
      keywordarray.push(recipeName)
+     keywordarray.push(username)
      setName("")
      setUsername("")
      setInstructions("")
@@ -84,7 +85,7 @@ export default function Recipebuilder() {
                                 </Pressable>
                             </View>
                         </View>
-                        : <View style={styles.query}><Text style={{fontSize: 20, padding: 40, color: "#FF0000"}}>Please check the that all the fields contain something!</Text></View>
+                        : <View style={styles.query}><Text style={{fontSize: 20, padding: 40, color: "#FF0000"}}>Please check that all the fields contain something!</Text></View>
 }
                     </View>
                 </Modal>
