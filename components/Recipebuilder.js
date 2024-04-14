@@ -59,6 +59,7 @@ export default function Recipebuilder() {
       setAccepted(false)
       setTimeout(() => setModal(false) + setAccepted(true), 4000)
     }
+    
     }
     
     return (
