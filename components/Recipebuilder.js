@@ -2,6 +2,7 @@ import { Text, View, TextInput, StyleSheet, Pressable, Image, ScrollView,Modal }
 import { useState } from 'react';
 import IngredientAdder from "./IngredientAdder"
 import { firestore,collection,addDoc,userrecipes, query, onSnapshot } from '../firebase/Config';
+import AlertModal from './Alert'
 export default function Recipebuilder() {
     const [IngredientJsonArray, setJsonArray] = useState([])
     const [recipeName, setName] = useState("")
@@ -10,6 +11,7 @@ export default function Recipebuilder() {
     const [key, setKey] = useState(Math.random());
     const [modal, setModal] = useState(false)
     const [accepeted, setAccepted] = useState(true)
+    const [alert, setalert] = useState(false)
     handlePress = (array) => {
         console.log(array)
         setJsonArray(array)
@@ -55,6 +57,10 @@ export default function Recipebuilder() {
         console.log('Message saved')
       }
       await save()
+      setalert(!alert)
+      setTimeout(() => {
+          setalert(false)
+      }, 4000)
     } else {
       setAccepted(false)
       setTimeout(() => setModal(false) + setAccepted(true), 4000)
@@ -74,6 +80,8 @@ export default function Recipebuilder() {
             <View style={styles.padding}>
                 <IngredientAdder functioncall={handlePress} key={key}/>
             </View>
+            { alert ? <AlertModal alertstate={alert} alert={"Thank you, the recipe was recieved!"}/> : <></>
+            }
             <View style={styles.padding}>
                 <View style={styles.instructions}>
                     <TextInput onChangeText={text => setInstructions(text)} style={styles.instructionsinput} value={recipeInstructions} numberOfLines={4} multiline={true} allowFontScaling={true} placeholder='Write instructions here!'></TextInput>

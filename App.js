@@ -31,6 +31,14 @@ export default function App() {
             component={Mainmenu}
           />
              <Stack.Screen
+            name="Recipebuilder"
+            component={Recipebuilder}
+            options={({ route }) => ({
+              title: "Recipe Builder",
+              headerTitle: route.Recipebuilder,
+            })}
+          />
+             <Stack.Screen
             name="Search"
             component={Searchpage}
             options={({ route }) => ({
@@ -53,15 +61,7 @@ export default function App() {
               title: "Recipe",
               headerTitle: route.RecipePage,
             })}
-          />
-          <Stack.Screen
-            name="Recipebuilder"
-            component={Recipebuilder}
-            options={({ route }) => ({
-              title: "Recipe Builder",
-              headerTitle: route.Recipebuilder,
-            })}
-          />
+          /> 
           <Stack.Screen
             name="Calculator"
             component={CalorieCalculator}

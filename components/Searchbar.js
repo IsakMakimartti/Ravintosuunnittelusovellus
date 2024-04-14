@@ -1,11 +1,11 @@
 
 import { useState } from 'react';
-import { getDocs, firestore, collection, addDoc, userrecipes, query, onSnapshot, where } from '../firebase/Config';
-import { StyleSheet, Text, TextInput, View, Image, Pressable, ScrollView, SafeAreaView, useWindowDimensions, KeyboardAvoidingView, Modal, Keyboard } from 'react-native';
+import { getDocs, firestore, collection, userrecipes, query, where } from '../firebase/Config';
+import { StyleSheet, Text, TextInput, View, Image, Pressable, ScrollView, Modal, Keyboard } from 'react-native';
 import { Button } from 'react-native-paper';
 import { cuisineType } from "../data/random.json"
 import { useNavigation } from '@react-navigation/native';
-
+import AlertModal from './Alert'
 export default function Searchbar() {
     const navigation = useNavigation();
     const [inputText, setInput] = useState("")
@@ -36,9 +36,9 @@ export default function Searchbar() {
                 </View> :
                 <></>
             }
-            {modal ? <ModalComponent /> : <></>
+            {modal ? <ModalComponent/> : <></>
             }
-            {alert ? <AlertModal /> : <></>
+            {alert ? <AlertModal alertstate={alert} alert={"Please Make the input more than 3 charaters!"}/> : <></>
             }
             <View style={{ flex: 1, margin: 10 }}>
                 <View>
@@ -69,17 +69,6 @@ export default function Searchbar() {
         })
         setuserarray(temparray)
         setloaded(true)
-    }
-    function AlertModal() {
-        return (
-            <Modal visible={alert} onRequestClose={() => ismodal(!modal)} transparent={true} animationType={"slide"}>
-                <View style={{ flex: 1, alignContent: "center", alignSelf: "center", justifyContent: "center" }}>
-                    <View style={styles.alertmodal}>
-                        <Text style={styles.alert}>Please Make the input more than 3 charaters!</Text>
-                    </View>
-                </View>
-            </Modal>
-        )
     }
     function ModalComponent() {
         return (
