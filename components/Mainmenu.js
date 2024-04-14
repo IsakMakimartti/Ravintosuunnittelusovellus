@@ -46,9 +46,7 @@ export default function MainMenu() {
         } catch (error) {
             console.error("Error fetching data:", error);
             setLoading(false);
-        } finally {
-          setTimeout(()=>setLoading(false),500)
-        }
+        } 
     };
     fetchdata()
 
