@@ -19,15 +19,26 @@ export default function Recipebuilder() {
         })
     }
     handleFinnish = async() => {
+        capitalizeLetter = (string) => {
+            if(string !== string.toLowerCase){
+            return string.toLowerCase()   
+            } else {
+            var capitalletter = string.charAt(0).toUppercase()
+            var capital = capitalletter + string.slice(1)
+            return capital
+            }
+         }
      if(recipeInstructions.length>1 && recipeName.length>1 && IngredientJsonArray.length>0){
         setModal(false)
      var keywordarray = []
      keywordarray = keywordarray.concat(recipeName.split(" "))
      IngredientJsonArray.forEach(data => {
         keywordarray.push(data.ingredient.name)
-     })
-     keywordarray.push(recipeName)
+        keywordarray.push(capitalizeLetter(data.ingredient.name))
+     }) 
+     keywordarray.push(capitalizeLetter(recipeName))
      keywordarray.push(username)
+     keywordarray.push(capitalizeLetter(username))
      setName("")
      setUsername("")
      setInstructions("")
