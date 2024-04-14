@@ -26,6 +26,10 @@ export default function App() {
             title: "RSS",
           }}
         >
+           <Stack.Screen
+            name="Home"
+            component={Mainmenu}
+          />
              <Stack.Screen
             name="Search"
             component={Searchpage}
@@ -33,10 +37,6 @@ export default function App() {
               title: "Search",
               headerTitle: route.Searchpage,
             })}
-          />
-          <Stack.Screen
-            name="Home"
-            component={Mainmenu}
           />
         <Stack.Screen
           name="Calendar"
