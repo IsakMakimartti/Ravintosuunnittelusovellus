@@ -3,6 +3,8 @@ import { StyleSheet, Text, View, Image, ScrollView, Dimensions, SafeAreaView, To
 import { StatusBar } from 'expo-status-bar';
 import Modal from 'react-native-modal';
 import 'react-native-gesture-handler';
+import CalorieCalculator from "./CalorieCalculator";
+import { useNavigation } from '@react-navigation/native';
 
 export default function RecipePage({ route }) {
     const { id } = route.params;
@@ -12,7 +14,7 @@ export default function RecipePage({ route }) {
     const [calories, setCalories] = useState(null);
 
     const handleButtonPress = () => {
-        console.log('Button pressed');
+        console.log('Add button pressed');
     };
 
     const handleIngredientPress = async (quantity, measure, food) => {
@@ -60,7 +62,7 @@ export default function RecipePage({ route }) {
                 <Text style={styles.label}>{data.recipe.label}</Text>
                 <Image style={styles.image} source={{ uri: data.recipe.image }} />
                 <View style={styles.ingredientBox}>
-                    <AddRecipeButton onPress={handleButtonPress} />
+                    <AddRecipeButton onPress={handleButtonPress} totalCalories={data.recipe.calories} recipeLabel={data.recipe.label} />
                     <Text style={styles.subLabel}>Ingredients</Text>
                     {data.recipe.ingredientLines.map((ingredientLine, index) => {
                         const [quantity, measure, ...foods] = ingredientLine.split(' ');
@@ -114,7 +116,7 @@ export default function RecipePage({ route }) {
     );
 }
 
-const AddRecipeButton = ({ onPress }) => {
+const AddRecipeButton = ({ onPress, totalCalories, recipeLabel }) => {
     const [active, setActive] = useState(false);
     const [modalButtonsVisible, setModalButtonsVisible] = useState(false);
     const label = active ? 'Active' : 'Add';
@@ -140,25 +142,41 @@ const AddRecipeButton = ({ onPress }) => {
                 }}
             >
                 <View style={styles.modalButtonsContainer}>
-                    <ModalButtons onPress={handlePress} />
+                    <ModalButtons onPress={handlePress} totalCalories={totalCalories} recipeLabel={recipeLabel} />
                 </View>
             </Modal>
         </View>
     );
 };
 
-const ModalButtons = ({ onPress }) => {
+const ModalButtons = ({ onPress, totalCalories, recipeLabel }) => {
+    const navigation = useNavigation();
+
     const label1 = 'Calculator'
     const label2 = 'Calendar'
     const label3 = 'Cancel'
 
-    const handlePress = () => {
-        onPress();
+    const handlePressCalculator = () => {
+        console.log("Calculator button pressed. Calories: " + totalCalories)
+        console.log("Calculator button pressed. Label: " + recipeLabel)
+
+        const newRecipe = {
+            id: Math.random().toString(),
+            title: recipeLabel,
+            calories: totalCalories
+          }
+
+        navigation.navigate('Calculator', { newRecipe })
     };
+
+    // Testing, just closes modal
+    const handlePress = () => {
+        onPress()
+    }
 
     return (
         <View style={styles.modalButtonsView}>
-            <TouchableOpacity onPress={handlePress} style={[styles.button, styles.modalButtons]}>
+            <TouchableOpacity onPress={handlePressCalculator} style={[styles.button, styles.modalButtons]}>
                 <Text style={{ textAlign: 'center' }}>{label1}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handlePress} style={[styles.button, styles.modalButtons]}>
