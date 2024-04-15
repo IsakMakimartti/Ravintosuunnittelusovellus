@@ -1,29 +1,52 @@
 import { Text, View, TextInput, StyleSheet, Pressable, Image, ScrollView,Modal } from 'react-native';
 import { useState } from 'react';
 import IngredientAdder from "./IngredientAdder"
-
+import { firestore,collection,addDoc,userrecipes, query, onSnapshot } from '../firebase/Config';
 export default function Recipebuilder() {
     const [IngredientJsonArray, setJsonArray] = useState([])
     const [recipeName, setName] = useState("")
+    const [username, setUsername] = useState("")
     const [recipeInstructions, setInstructions] = useState("")
     const [key, setKey] = useState(Math.random());
     const [modal, setModal] = useState(false)
+    const [accepeted, setAccepted] = useState(true)
     handlePress = (array) => {
+        console.log(array)
         setJsonArray(array)
         IngredientJsonArray.forEach((value, index)  => {
             console.log(index+1)
             console.log(value.ingredient)
         })
     }
-    handleFinnish = () => {
-     console.log("Handeled")
-     console.log(recipeInstructions)
-     console.log(recipeName)
-     console.log(IngredientJsonArray)
+    handleFinnish = async() => {
+     if(recipeInstructions.length>1 && recipeName.length>1 && IngredientJsonArray.length>0){
+        setModal(false)
+     var keywordarray = []
+     keywordarray = keywordarray.concat(recipeName.split(" "))
+     IngredientJsonArray.forEach(data => {
+        keywordarray.push(data.ingredient.name)
+     })
+     keywordarray.push(recipeName)
      setName("")
+     setUsername("")
      setInstructions("")
-     setKey(Math.random())
      setJsonArray([])
+     setKey(Math.random())
+     const save = async() => {
+        const docRef = await addDoc(collection(firestore, userrecipes),{
+          username: username,
+          name: recipeName,
+          ingredients: IngredientJsonArray,
+          instructions: recipeInstructions,
+          keywords: keywordarray,
+        }).catch(error => console.log(error))
+        console.log('Message saved')
+      }
+      await save()
+    } else {
+      setAccepted(false)
+      setTimeout(() => setModal(false) + setAccepted(true), 4000)
+    }
     }
     
     return (
@@ -31,6 +54,7 @@ export default function Recipebuilder() {
         <View style={styles.container}>
             <View style={styles.padding}>
                 <View style={styles.inputcontainer}>
+                    <TextInput onChangeText={text => setUsername(text)} style={styles.inputstyle} value={username} placeholder='Username here!'></TextInput>
                     <TextInput onChangeText={text => setName(text)} style={styles.inputstyle} value={recipeName} placeholder='Recipe name here!'></TextInput>
                 </View>
             </View>
@@ -48,10 +72,11 @@ export default function Recipebuilder() {
                 </Pressable>
                 <Modal visible={modal} onRequestClose={() => setModal(!modal)} transparent={true} animationType={"slide"}>
                     <View style={styles.modal}>
+                        { accepeted ? 
                         <View style={styles.query}>
-                            <Text style={{fontSize: 30, padding: 20}}>Complete Recipe?</Text>
+                            <Text style={{fontSize: 30, padding: 20}}>Complete Recipe?</Text> 
                             <View style={styles.querybuttons}>
-                                <Pressable onPress={() => handleFinnish() + setModal(!modal)} style={{padding: 5, backgroundColor: "#7CFC00", alignItems:"center"}}>
+                                <Pressable onPress={() => handleFinnish()} style={{padding: 5, backgroundColor: "#7CFC00", alignItems:"center"}}>
                                     <Text style={{fontSize: 20}}>Accept</Text>
                                 </Pressable>
                                 <Pressable style={{padding: 5, backgroundColor: "#FF5733", alignItems:"center"}}>
@@ -59,6 +84,8 @@ export default function Recipebuilder() {
                                 </Pressable>
                             </View>
                         </View>
+                        : <View style={styles.query}><Text style={{fontSize: 20, padding: 40, color: "#FF0000"}}>Please check the that all the fields contain something!</Text></View>
+}
                     </View>
                 </Modal>
             </View>
@@ -125,7 +152,8 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
         paddingTop: 20,
         fontSize: 30,
-        textAlign: "center"
+        textAlign: "center", 
+        borderWidth: 0.3,
     },
     image: {
         width: 50,

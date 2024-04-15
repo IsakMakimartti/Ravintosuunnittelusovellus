@@ -8,7 +8,7 @@ export default function Footer() {
       <Pressable style={styles.image} onPress={()=> navigation.navigate('Home')}>
       <Image style={styles.image} source={require('../assets/home-icon.png')} ></Image>
       </Pressable>
-      <Pressable style={styles.image} onPress={()=> navigation.navigate('CalorieCalculator')}> 
+      <Pressable style={styles.image} onPress={()=> navigation.navigate('Calculator')}> 
       <Image style={styles.image} source={require('../assets/calculator-icon.png')}></Image>
       </Pressable>
       <Pressable style={styles.image} onPress={()=> navigation.navigate('Recipebuilder')}>

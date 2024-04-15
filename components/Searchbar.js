@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { getDocs,firestore,collection,addDoc,userrecipes, query, onSnapshot,where } from '../firebase/Config';
 import { StyleSheet, Text, TextInput, View, Image, Pressable, ScrollView, SafeAreaView, useWindowDimensions,KeyboardAvoidingView } from 'react-native';
 import { Button } from 'react-native-paper';
 import { cuisineType } from "../data/random.json"
@@ -9,10 +10,11 @@ export default function Searchbar() {
     const [inputText, setInput] = useState("")
     const [responsearray, setArray] = useState([undefined])
     const [randomarray, setRanArray] = useState([undefined])
+    const [userarray, setuserarray] = useState([undefined])
     return (
-<KeyboardAvoidingView style={{flex: 1, flexDirection: "column", alignItems: "center",justifyContent: "center"}}>
+        <>
         <View style={styles.row}>
-            <TextInput ononSubmitEditing={APIsearch} value={inputText} onChangeText={text => setInput(text.replace(/\s/g, ''))} style={styles.input} placeholder='Search...'></TextInput>
+            <TextInput ononSubmitEditing={APIsearch} value={inputText} onChangeText={text => setInput(text.replace())} style={styles.input} placeholder='Search...'></TextInput>
             <Pressable onPress={APIsearch} style={styles.press}>
                 <Image style={styles.image} source={require('../assets/magnifying-glass-16.png')} />
             </Pressable>
@@ -23,18 +25,26 @@ export default function Searchbar() {
                 <Searchresults data={responsearray}/>
         </View>
         </ScrollView> :  <></>
-         }
+         } 
         <View style={styles.buttoncontainer}>
             <Button onPress={() => Random()} labelStyle={{ fontSize: 18, textAlign: "center" }} style={styles.randombutton}>Give me ideas</Button>
         </View> 
             <View style={styles.RandomResultContainer}>
                 <RandomResultElement data={randomarray}/>  
-            </View>    
-    </KeyboardAvoidingView>
-
+            </View> 
+</>
     );
-    async function APIsearch(){
+async function APIsearch(){
+const citiesRef = collection(firestore, userrecipes);
+const q = query(citiesRef, where("keywords", 'array-contains', inputText))
+const res = await getDocs(q)
+var temparray = []
+res.forEach((doc) => {
+    temparray.push(doc.data())
+})
+setuserarray(temparray)
         var response = ""; 
+        var parsedinput = inputText.replace(" ", "%20")
         url = "https://api.edamam.com/api/recipes/v2?type=public&q=" + inputText + "&app_id="+ process.env.app_id + "&app_key=" +process.env.app_KEY
         await fetch(url)
         .then(async res => response = await res.json())
@@ -67,6 +77,10 @@ export default function Searchbar() {
                     </View>
                 </Pressable>
             )
+        } else {
+            return ( 
+                <></>
+            )
         }
     }
     function Searchresults(props) {
@@ -90,6 +104,14 @@ export default function Searchbar() {
             )
         }
         });
+        userarray.forEach( element => {
+            temparray.push(
+               <View style={styles.SearchRow}>
+               <Image source={require("../assets/user.png")} style={styles.imageoffood} />
+               <Text style={{paddingLeft: 20,height:"80%",width:"80%", alignContent:"center",justifyContent:"center", alignItems:"center", textAlignVertical: "center"}}>{element.name}</Text>
+               </View> 
+               )
+       })
         return temparray
         } else {
             return <></>
@@ -112,15 +134,15 @@ width: 20,
         flex: 1,
     },
     randompress: {
+        flex: 1,
     },
     randomHeader: {
-    fontSize: 20,
+        fontSize: 20,
     },
     randomcontainer: {
         alignItems: "center",
         flex: 1,
         flexDirection: "Column",
-        
     },
     buttoncontainer:{
         flex: 1,
@@ -140,9 +162,8 @@ width: 20,
         textAlign: "center",
     },
     scroll: {
-        flex: 1,
-        height: "20%",
-        width: "100%"
+    flex: 1,
+    maxHeight: "45%"
     },
     press: {
         flexBasis: '20%',
@@ -180,6 +201,5 @@ width: 20,
         justifyContent: 'center',
       },
       searchresults: {
-
       }
 });
