@@ -4,51 +4,14 @@ import { Button } from 'react-native-paper';
 import { useRoute } from '@react-navigation/native';
 import Searchbar from "./Searchbar";
 
-// For testing
-const TESTDATA = [
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'First Item',
-  },
-  {
-    id: '58699a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Second Item',
-  },
-  {
-    id: '58694b0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item',
-  },
-  {
-    id: '58693c0f-3da1-471f-bd96-145571e29d72',
-    title: 'Fourth Item',
-  },
-  {
-    id: '58690c0f-3da1-471f-bd96-145571e29d72',
-    title: 'Fifth Item',
-  },
-  {
-    id: '58691c0f-3da1-471f-bd96-145571e29d72',
-    title: 'Sixth Item',
-  },
-  {
-    id: '58692c0f-3da1-471f-bd96-145571e29d72',
-    title: 'Seventh Item',
-  },
-]
-
-// For testing
-/*const Item = ({ title }) => (
-  <View style={styles.item}>
-    <Text style={styles.title}>{title}</Text>
-  </View>
-);*/
-
 export default function CalorieCalculator() {
   const [calories, setCalories] = useState(0)
   const [showSearchbar, setShowSearchbar] = useState(false)
   const [recipes, setRecipes] = useState([]);
 
   const route = useRoute()
+
+  // Default value is an empty array, otherwise assigns the values from route.params
   const { newRecipe = {} } = route.params || {};
 
   const toggleSearchbar = () => {
@@ -57,8 +20,9 @@ export default function CalorieCalculator() {
 
   useEffect(() => {
     if (newRecipe && newRecipe.title) {
-      // Add the new recipe to the recipes state
+      // Adds the new recipe to the recipes state
       setRecipes(prevRecipes => [...prevRecipes, newRecipe]);
+      // Sums calories to previous the previous value
       setCalories(prevCalories => prevCalories + newRecipe.calories)
     }
   }, [newRecipe]);
