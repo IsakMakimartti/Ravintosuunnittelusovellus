@@ -49,25 +49,20 @@ export default function CalorieCalculator() {
   const [recipes, setRecipes] = useState([]);
 
   const route = useRoute()
-  const { totalCalories = 0, recipeLabel = "" } = route.params || {};
+  const { newRecipe = {} } = route.params || {};
 
   const toggleSearchbar = () => {
     setShowSearchbar(!showSearchbar)
   }
 
   useEffect(() => {
-    // Update calories state with totalCalories from route params
-    setCalories(totalCalories);
-  }, [totalCalories]);
-
-  const addRecipe = () => {
-    const newRecipe = {
-      id: Math.random().toString(),
-      title: recipeLabel
+    if (newRecipe && newRecipe.title) {
+      // Add the new recipe to the recipes state
+      setRecipes(prevRecipes => [...prevRecipes, newRecipe]);
+      setCalories(prevCalories => prevCalories + newRecipe.calories)
     }
-    setRecipes([...recipes, newRecipe])
-  }
-
+  }, [newRecipe]);
+  
   const renderRecipeItem = ({ item }) => (
     <View style={styles.item}>
       <Text style={styles.title}>{item.title}</Text>

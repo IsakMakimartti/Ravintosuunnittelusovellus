@@ -159,7 +159,14 @@ const ModalButtons = ({ onPress, totalCalories, recipeLabel }) => {
     const handlePressCalculator = () => {
         console.log("Calculator button pressed. Calories: " + totalCalories)
         console.log("Calculator button pressed. Label: " + recipeLabel)
-        navigation.navigate('Calculator', { totalCalories, recipeLabel})
+
+        const newRecipe = {
+            id: Math.random().toString(),
+            title: recipeLabel,
+            calories: totalCalories
+          }
+
+        navigation.navigate('Calculator', { newRecipe })
     };
 
     // Testing, just closes modal
