@@ -62,11 +62,9 @@ export default function Recipebuilder(props) {
 
     );
     function jsondelete(num) {
-    setopen(true)
-    ingredientsjson.splice(num)
-    
-    setopen(false)
-    props.functioncall(ingredientsjson)
+    // :) 
+    var valuetosetforrerender = ingredientsjson.splice(num)
+    props.functioncall(valuetosetforrerender)
     }
     function addIngredient() {
     var pass = true; 
