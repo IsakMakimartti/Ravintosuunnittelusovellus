@@ -1,6 +1,7 @@
 import { useState, useEffect, React } from "react";
 import { StyleSheet, Text, View, FlatList, SafeAreaView } from "react-native";
 import { Button } from 'react-native-paper';
+import { useRoute } from '@react-navigation/native';
 import Searchbar from "./Searchbar";
 
 // For testing
@@ -36,19 +37,42 @@ const TESTDATA = [
 ]
 
 // For testing
-const Item = ({ title }) => (
+/*const Item = ({ title }) => (
   <View style={styles.item}>
     <Text style={styles.title}>{title}</Text>
   </View>
-);
+);*/
 
 export default function CalorieCalculator() {
   const [calories, setCalories] = useState(0)
   const [showSearchbar, setShowSearchbar] = useState(false)
+  const [recipes, setRecipes] = useState([]);
+
+  const route = useRoute()
+  const { totalCalories = 0, recipeLabel = "" } = route.params || {};
 
   const toggleSearchbar = () => {
     setShowSearchbar(!showSearchbar)
   }
+
+  useEffect(() => {
+    // Update calories state with totalCalories from route params
+    setCalories(totalCalories);
+  }, [totalCalories]);
+
+  const addRecipe = () => {
+    const newRecipe = {
+      id: Math.random().toString(),
+      title: recipeLabel
+    }
+    setRecipes([...recipes, newRecipe])
+  }
+
+  const renderRecipeItem = ({ item }) => (
+    <View style={styles.item}>
+      <Text style={styles.title}>{item.title}</Text>
+    </View>
+  )
 
   const header = "Total calories: " + calories
 
@@ -60,9 +84,9 @@ export default function CalorieCalculator() {
             <Text style={styles.title}>{header}</Text>
           </View>
           <FlatList
-            data={TESTDATA}
-            renderItem={({ item }) => <Item title={item.title} />}
-            keyExtractor={item => item.id}
+            data={recipes}
+            renderItem={renderRecipeItem}
+            keyExtractor={(item) => item.id}
           />
           <View style={styles.addButtonContainer}>
             <Button
