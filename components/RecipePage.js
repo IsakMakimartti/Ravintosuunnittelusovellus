@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, Dimensions, SafeAreaView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, Dimensions, SafeAreaView, TouchableOpacity, Linking } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import Modal from 'react-native-modal';
 import 'react-native-gesture-handler';
@@ -15,6 +15,10 @@ export default function RecipePage({ route }) {
 
     const handleButtonPress = () => {
         console.log('Add button pressed');
+    };
+    const handlePress = () => {
+
+        Linking.openURL(data.recipe.url);
     };
 
     const handleIngredientPress = async (quantity, measure, food) => {
@@ -88,6 +92,10 @@ export default function RecipePage({ route }) {
                         );
                     })}
                 </View>
+                <Text style={styles.subLabel}>Source</Text>
+                <View style={{width: imageWidth}}>
+                    <RecipeLink onPress={handlePress} recipeLink={data.recipe.url} recipeSource={data.recipe.source}/>
+                </View>
                 <Text style={styles.subLabel}>Nutritional values</Text>
                 <View style={styles.ingredientBox}>
                     {Object.keys(data.recipe.totalNutrients).map((key, index) => (
@@ -146,6 +154,19 @@ const AddRecipeButton = ({ onPress, totalCalories, recipeLabel }) => {
                 </View>
             </Modal>
         </View>
+    );
+};
+
+const RecipeLink = ({ onPress, recipeLink, recipeSource }) => {
+    const handlePress = () => {
+        Linking.openURL(recipeLink);
+            onPress();
+    };
+
+    return (
+        <TouchableOpacity onPress={handlePress}>
+            <Text style={{ color: 'black', textDecorationLine: 'underline', fontSize: 20, marginBottom:20, textAlign: 'left' }}>{recipeSource}</Text>
+        </TouchableOpacity>
     );
 };
 
