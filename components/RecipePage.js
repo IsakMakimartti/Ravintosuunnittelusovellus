@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, Image, ScrollView, Dimensions, SafeAreaView, To
 import { StatusBar } from 'expo-status-bar';
 import Modal from 'react-native-modal';
 import 'react-native-gesture-handler';
-import CalorieCalculator from "./CalorieCalculator";
 import { useNavigation } from '@react-navigation/native';
 
 export default function RecipePage({ route }) {
@@ -58,7 +57,7 @@ export default function RecipePage({ route }) {
                 <Text style={styles.label}>{data.recipe.label}</Text>
                 <Image style={styles.image} source={{ uri: data.recipe.image }} />
                 <View style={styles.ingredientBox}>
-                    <AddRecipeButton totalCalories={data.recipe.calories} recipeLabel={data.recipe.label} />
+                    <AddRecipeButton totalCalories={data.recipe.calories} recipeLabel={data.recipe.label} recipeImage={data.recipe.images.SMALL.url} />
                     <Text style={styles.subLabel}>Ingredients</Text>
                     {data.recipe.ingredientLines.map((ingredientLine, index) => {
                         const [quantity, measure, ...foods] = ingredientLine.split(' ');
@@ -112,7 +111,7 @@ export default function RecipePage({ route }) {
     );
 }
 
-const AddRecipeButton = ({ totalCalories, recipeLabel }) => {
+const AddRecipeButton = ({ totalCalories, recipeLabel, recipeImage }) => {
     const [modalButtonsVisible, setModalButtonsVisible] = useState(false);
     const label = 'Add';
 
@@ -136,14 +135,14 @@ const AddRecipeButton = ({ totalCalories, recipeLabel }) => {
                 }}
             >
                 <View style={styles.modalButtonsContainer}>
-                    <ModalButtons onPress={handlePress} totalCalories={totalCalories} recipeLabel={recipeLabel} />
+                    <ModalButtons onPress={handlePress} totalCalories={totalCalories} recipeLabel={recipeLabel} recipeImage={recipeImage} />
                 </View>
             </Modal>
         </View>
     );
 };
 
-const ModalButtons = ({ onPress, totalCalories, recipeLabel }) => {
+const ModalButtons = ({ onPress, totalCalories, recipeLabel, recipeImage }) => {
     const navigation = useNavigation();
 
     const label1 = 'Calculator'
@@ -153,11 +152,13 @@ const ModalButtons = ({ onPress, totalCalories, recipeLabel }) => {
     const handlePressCalculator = () => {
         console.log("Calculator button pressed. Calories: " + totalCalories)
         console.log("Calculator button pressed. Label: " + recipeLabel)
+        console.log("Calculator button pressed. Image: " + recipeImage)
 
         const newRecipe = {
             id: Math.random().toString(),
             title: recipeLabel,
-            calories: totalCalories
+            calories: totalCalories,
+            image: recipeImage
         }
 
         onPress()
