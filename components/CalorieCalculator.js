@@ -24,6 +24,7 @@ export default function CalorieCalculator() {
       setRecipes(prevRecipes => [...prevRecipes, newRecipe]);
       // Sums calories to previous the previous value
       setCalories(prevCalories => prevCalories + newRecipe.calories)
+      setShowSearchbar(!showSearchbar)
     }
   }, [newRecipe]);
   
@@ -33,7 +34,7 @@ export default function CalorieCalculator() {
     </View>
   )
 
-  const header = "Total calories: " + calories
+  const header = "Total calories: " + calories.toFixed(0)
 
   return (
     <SafeAreaView style={styles.container}>

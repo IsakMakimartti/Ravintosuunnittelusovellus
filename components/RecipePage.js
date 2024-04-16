@@ -13,10 +13,6 @@ export default function RecipePage({ route }) {
     const [modalVisible, setModalVisible] = useState(false);
     const [calories, setCalories] = useState(null);
 
-    const handleButtonPress = () => {
-        console.log('Add button pressed');
-    };
-
     const handleIngredientPress = async (quantity, measure, food) => {
         try {
             const encodedFood = encodeURIComponent(food);
@@ -62,7 +58,7 @@ export default function RecipePage({ route }) {
                 <Text style={styles.label}>{data.recipe.label}</Text>
                 <Image style={styles.image} source={{ uri: data.recipe.image }} />
                 <View style={styles.ingredientBox}>
-                    <AddRecipeButton onPress={handleButtonPress} totalCalories={data.recipe.calories} recipeLabel={data.recipe.label} />
+                    <AddRecipeButton totalCalories={data.recipe.calories} recipeLabel={data.recipe.label} />
                     <Text style={styles.subLabel}>Ingredients</Text>
                     {data.recipe.ingredientLines.map((ingredientLine, index) => {
                         const [quantity, measure, ...foods] = ingredientLine.split(' ');
@@ -116,15 +112,13 @@ export default function RecipePage({ route }) {
     );
 }
 
-const AddRecipeButton = ({ onPress, totalCalories, recipeLabel }) => {
-    const [active, setActive] = useState(false);
+const AddRecipeButton = ({ totalCalories, recipeLabel }) => {
     const [modalButtonsVisible, setModalButtonsVisible] = useState(false);
-    const label = active ? 'Active' : 'Add';
+    const label = 'Add';
 
     const handlePress = () => {
-        setActive(!active);
         setModalButtonsVisible(!modalButtonsVisible)
-        onPress();
+        console.log('Add button pressed');
     };
 
     return (
@@ -164,8 +158,9 @@ const ModalButtons = ({ onPress, totalCalories, recipeLabel }) => {
             id: Math.random().toString(),
             title: recipeLabel,
             calories: totalCalories
-          }
+        }
 
+        onPress()
         navigation.navigate('Calculator', { newRecipe })
     };
 
