@@ -2,6 +2,7 @@ import { Text, View, TextInput, StyleSheet, Pressable, Image, ScrollView,Modal }
 import { useState } from 'react';
 import IngredientAdder from "./IngredientAdder"
 import { firestore,collection,addDoc,userrecipes, query, onSnapshot } from '../firebase/Config';
+import AlertModal from './Alert'
 export default function Recipebuilder() {
     const [IngredientJsonArray, setJsonArray] = useState([])
     const [recipeName, setName] = useState("")
@@ -10,6 +11,7 @@ export default function Recipebuilder() {
     const [key, setKey] = useState(Math.random());
     const [modal, setModal] = useState(false)
     const [accepeted, setAccepted] = useState(true)
+    const [alert, setalert] = useState(false)
     handlePress = (array) => {
         console.log(array)
         setJsonArray(array)
@@ -19,14 +21,26 @@ export default function Recipebuilder() {
         })
     }
     handleFinnish = async() => {
+        capitalizeLetter = (string) => {
+            if(string !== string.toLowerCase){
+            return string.toLowerCase()   
+            } else {
+            var capitalletter = string.charAt(0).toUppercase()
+            var capital = capitalletter + string.slice(1)
+            return capital
+            }
+         }
      if(recipeInstructions.length>1 && recipeName.length>1 && IngredientJsonArray.length>0){
         setModal(false)
      var keywordarray = []
      keywordarray = keywordarray.concat(recipeName.split(" "))
      IngredientJsonArray.forEach(data => {
         keywordarray.push(data.ingredient.name)
-     })
-     keywordarray.push(recipeName)
+        keywordarray.push(capitalizeLetter(data.ingredient.name))
+     }) 
+     keywordarray.push(capitalizeLetter(recipeName))
+     keywordarray.push(username)
+     keywordarray.push(capitalizeLetter(username))
      setName("")
      setUsername("")
      setInstructions("")
@@ -43,10 +57,15 @@ export default function Recipebuilder() {
         console.log('Message saved')
       }
       await save()
+      setalert(!alert)
+      setTimeout(() => {
+          setalert(false)
+      }, 4000)
     } else {
       setAccepted(false)
       setTimeout(() => setModal(false) + setAccepted(true), 4000)
     }
+    
     }
     
     return (
@@ -61,6 +80,8 @@ export default function Recipebuilder() {
             <View style={styles.padding}>
                 <IngredientAdder functioncall={handlePress} key={key}/>
             </View>
+            { alert ? <AlertModal alertstate={alert} alert={"Thank you, the recipe was recieved!"}/> : <></>
+            }
             <View style={styles.padding}>
                 <View style={styles.instructions}>
                     <TextInput onChangeText={text => setInstructions(text)} style={styles.instructionsinput} value={recipeInstructions} numberOfLines={4} multiline={true} allowFontScaling={true} placeholder='Write instructions here!'></TextInput>
@@ -84,7 +105,7 @@ export default function Recipebuilder() {
                                 </Pressable>
                             </View>
                         </View>
-                        : <View style={styles.query}><Text style={{fontSize: 20, padding: 40, color: "#FF0000"}}>Please check the that all the fields contain something!</Text></View>
+                        : <View style={styles.query}><Text style={{fontSize: 20, padding: 40, color: "#FF0000"}}>Please check that all the fields contain something!</Text></View>
 }
                     </View>
                 </Modal>
