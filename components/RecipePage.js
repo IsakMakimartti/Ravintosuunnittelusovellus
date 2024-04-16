@@ -129,7 +129,6 @@ const AddRecipeButton = ({ totalCalories, recipeLabel, recipeImage }) => {
 
     const handlePress = () => {
         setModalButtonsVisible(!modalButtonsVisible)
-        console.log('Add button pressed');
     };
 
     return (
@@ -174,18 +173,13 @@ const ModalButtons = ({ onPress, totalCalories, recipeLabel, recipeImage }) => {
     const label2 = 'Calendar'
     const label3 = 'Cancel'
 
-    const handlePressCalculator = () => {
-        console.log("Calculator button pressed. Calories: " + totalCalories)
-        console.log("Calculator button pressed. Label: " + recipeLabel)
-        console.log("Calculator button pressed. Image: " + recipeImage)
-
+    const handlePressCalculator = () => { 
         const newRecipe = {
             id: Math.random().toString(),
             title: recipeLabel,
             calories: totalCalories,
             image: recipeImage
         }
-
         onPress()
         navigation.navigate('Calculator', { newRecipe })
     };
