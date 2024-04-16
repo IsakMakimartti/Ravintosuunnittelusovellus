@@ -141,14 +141,16 @@ const styles = StyleSheet.create({
   },
   imageText: {
     position: 'absolute',
-    bottom: 160,
+    bottom: 100,
     left: 0,
     right: 0,
     color: 'white',
     textAlign: 'center',
     padding: 5,
     fontSize: 40,
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: { width: 3, height: 3 },
     textShadowRadius: 6,
+    maxHeight: 260,
   },
 });
