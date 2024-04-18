@@ -41,13 +41,14 @@ export default function MainMenu() {
             var fetchurl = "https://api.edamam.com/api/recipes/v2?type=public&q=&app_id="+process.env.app_id+"&app_key="+process.env.app_key+"&cuisineType="+cusine+"&mealType="+meal
             const response = await fetch(fetchurl);
             console.log(fetchurl)
-          
             const data = await response.json();
             setData(data);
-            setLoading(false);
+            setLoading(false)
         } catch (error) {
             console.error("Error fetching data:", error);
             setLoading(false);
+        } finally {
+          setTimeout(()=>setLoading(false),500)
         }
     };
     fetchdata()
@@ -69,8 +70,9 @@ export default function MainMenu() {
 }
 function Foods(props){
   const navigation = useNavigation();
-
+  console.log(props.array.hits[2].recipe.image)
   var temparray = []; 
+  if(props.array.hits[2].recipe.image !== undefined){
   for(let i = 0; i < 19; i++){
     var imageUrl = props.array.hits[i].recipe.image;
     const handlePress = () => {
@@ -87,6 +89,9 @@ function Foods(props){
         </View>
     );
   }
+} else {
+  temparray.push(<View></View>)
+}
 
   return temparray;
 }
@@ -139,14 +144,16 @@ const styles = StyleSheet.create({
   },
   imageText: {
     position: 'absolute',
-    bottom: 160,
+    bottom: 100,
     left: 0,
     right: 0,
     color: 'white',
     textAlign: 'center',
     padding: 5,
     fontSize: 40,
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: { width: 3, height: 3 },
     textShadowRadius: 6,
+    maxHeight: 260,
   },
 });

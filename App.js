@@ -26,16 +26,25 @@ export default function App() {
             title: "RSS",
           }}
         >
+           <Stack.Screen
                         <Stack.Screen
             name="Home"
             component={Mainmenu}
           />
-            <Stack.Screen
+             <Stack.Screen
             name="Recipebuilder"
             component={Recipebuilder}
             options={({ route }) => ({
               title: "Recipe Builder",
               headerTitle: route.Recipebuilder,
+            })}
+          />
+             <Stack.Screen
+            name="Search"
+            component={Searchpage}
+            options={({ route }) => ({
+              title: "Search",
+              headerTitle: route.Searchpage,
             })}
           />
         <Stack.Screen
@@ -53,20 +62,12 @@ export default function App() {
               title: "Recipe",
               headerTitle: route.RecipePage,
             })}
-          />
+          /> 
           <Stack.Screen
-            name="Search"
-            component={Searchpage}
-            options={({ route }) => ({
-              title: "Search",
-              headerTitle: route.Searchpage,
-            })}
-          />
-          <Stack.Screen
-            name="CalorieCalculator"
+            name="Calculator"
             component={CalorieCalculator}
             options={({ route }) => ({
-              title: "CalorieCalculator",
+              title: "Calculator",
               headerTitle: route.CalorieCalculator,
             })}
           />

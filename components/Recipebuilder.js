@@ -2,6 +2,7 @@ import { Text, View, TextInput, StyleSheet, Pressable, Image, ScrollView,Modal,B
 import { useState } from 'react';
 import IngredientAdder from "./IngredientAdder"
 import { firestore,collection,addDoc,userrecipes, query, onSnapshot } from '../firebase/Config';
+import AlertModal from './Alert'
 export default function Recipebuilder() {
     const [IngredientJsonArray, setJsonArray] = useState([])
     const [recipeName, setName] = useState("")
@@ -9,7 +10,10 @@ export default function Recipebuilder() {
     const [recipeInstructions, setInstructions] = useState("")
     const [key, setKey] = useState(Math.random());
     const [modal, setModal] = useState(false)
+    const [accepeted, setAccepted] = useState(true)
+    const [alert, setalert] = useState(false)
     handlePress = (array) => {
+        console.log(array)
         setJsonArray(array)
         IngredientJsonArray.forEach((value, index)  => {
             console.log(index+1)
@@ -49,11 +53,32 @@ export default function Recipebuilder() {
             console.log(response.calories)
             arrayof.push(array)
         })
+        capitalizeLetter = (string) => {
+            if(string !== string.toLowerCase){
+            return string.toLowerCase()   
+            } else {
+            var capitalletter = string.charAt(0).toUppercase()
+            var capital = capitalletter + string.slice(1)
+            return capital
+            }
+         }
+     if(recipeInstructions.length>1 && recipeName.length>1 && IngredientJsonArray.length>0){
+        setModal(false)
+     var keywordarray = []
+     keywordarray = keywordarray.concat(recipeName.split(" "))
+     IngredientJsonArray.forEach(data => {
+        keywordarray.push(data.ingredient.name)
+        keywordarray.push(capitalizeLetter(data.ingredient.name))
+     }) 
+     keywordarray.push(capitalizeLetter(recipeName))
+     keywordarray.push(username)
+     keywordarray.push(capitalizeLetter(username))
      setName("")
      setUsername("")
      setInstructions("")
      setJsonArray([])
 
+     setKey(Math.random())
      const save = async() => {
         let tempcalories = 0; 
         let tempfat = 0; 
@@ -108,6 +133,8 @@ export default function Recipebuilder() {
             <View style={styles.padding}>
                 <IngredientAdder functioncall={handlePress} key={key}/>
             </View>
+            { alert ? <AlertModal alertstate={alert} alert={"Thank you, the recipe was recieved!"}/> : <></>
+            }
             <View style={styles.padding}>
                 <View style={styles.instructions}>
                     <TextInput onChangeText={text => setInstructions(text)} style={styles.instructionsinput} value={recipeInstructions} numberOfLines={4} multiline={true} allowFontScaling={true} placeholder='Write instructions here!'></TextInput>
@@ -119,10 +146,11 @@ export default function Recipebuilder() {
                 </Pressable>
                 <Modal visible={modal} onRequestClose={() => setModal(!modal)} transparent={true} animationType={"slide"}>
                     <View style={styles.modal}>
+                        { accepeted ? 
                         <View style={styles.query}>
-                            <Text style={{fontSize: 30, padding: 20}}>Complete Recipe?</Text>
+                            <Text style={{fontSize: 30, padding: 20}}>Complete Recipe?</Text> 
                             <View style={styles.querybuttons}>
-                                <Pressable onPress={() => handleFinnish() + setModal(!modal)} style={{padding: 5, backgroundColor: "#7CFC00", alignItems:"center"}}>
+                                <Pressable onPress={() => handleFinnish()} style={{padding: 5, backgroundColor: "#7CFC00", alignItems:"center"}}>
                                     <Text style={{fontSize: 20}}>Accept</Text>
                                 </Pressable>
                                 <Pressable style={{padding: 5, backgroundColor: "#FF5733", alignItems:"center"}}>
@@ -130,6 +158,8 @@ export default function Recipebuilder() {
                                 </Pressable>
                             </View>
                         </View>
+                        : <View style={styles.query}><Text style={{fontSize: 20, padding: 40, color: "#FF0000"}}>Please check that all the fields contain something!</Text></View>
+}
                     </View>
                 </Modal>
             </View>
