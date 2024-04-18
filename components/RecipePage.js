@@ -59,13 +59,22 @@ export default function RecipePage({ route }) {
         );
     }
 
+    console.log(data.recipe.totalNutrients.FAT)
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <Text style={styles.label}>{data.recipe.label}</Text>
                 <Image style={styles.image} source={{ uri: data.recipe.image }} />
                 <View style={styles.ingredientBox}>
-                    <AddRecipeButton totalCalories={data.recipe.calories} recipeLabel={data.recipe.label} recipeImage={data.recipe.images.SMALL.url} />
+                    <AddRecipeButton
+                        totalCalories={data.recipe.calories}
+                        recipeLabel={data.recipe.label}
+                        recipeImage={data.recipe.images.SMALL.url}
+                        recipeFat={data.recipe.totalNutrients.FAT}
+                        recipeCarbs={data.recipe.totalNutrients.CHOCDF}
+                        recipeProtein={data.recipe.totalNutrients.PROCNT}
+                    />
                     <Text style={styles.subLabel}>Ingredients</Text>
                     {data.recipe.ingredientLines.map((ingredientLine, index) => {
                         const [quantity, measure, ...foods] = ingredientLine.split(' ');
@@ -92,8 +101,8 @@ export default function RecipePage({ route }) {
                     })}
                 </View>
                 <Text style={styles.subLabel}>Source</Text>
-                <View style={{width: imageWidth}}>
-                    <RecipeLink onPress={handlePress} recipeLink={data.recipe.url} recipeSource={data.recipe.source}/>
+                <View style={{ width: imageWidth }}>
+                    <RecipeLink onPress={handlePress} recipeLink={data.recipe.url} recipeSource={data.recipe.source} />
                 </View>
                 <Text style={styles.subLabel}>Nutritional values</Text>
                 <View style={styles.ingredientBox}>
@@ -123,7 +132,7 @@ export default function RecipePage({ route }) {
     );
 }
 
-const AddRecipeButton = ({ totalCalories, recipeLabel, recipeImage }) => {
+const AddRecipeButton = ({ totalCalories, recipeLabel, recipeImage, recipeFat, recipeCarbs, recipeProtein }) => {
     const [modalButtonsVisible, setModalButtonsVisible] = useState(false);
     const label = 'Add';
 
@@ -146,7 +155,15 @@ const AddRecipeButton = ({ totalCalories, recipeLabel, recipeImage }) => {
                 }}
             >
                 <View style={styles.modalButtonsContainer}>
-                    <ModalButtons onPress={handlePress} totalCalories={totalCalories} recipeLabel={recipeLabel} recipeImage={recipeImage} />
+                    <ModalButtons
+                        onPress={handlePress}
+                        totalCalories={totalCalories}
+                        recipeLabel={recipeLabel}
+                        recipeImage={recipeImage}
+                        recipeFat={recipeFat}
+                        recipeCarbs={recipeCarbs}
+                        recipeProtein={recipeProtein}
+                    />
                 </View>
             </Modal>
         </View>
@@ -156,29 +173,32 @@ const AddRecipeButton = ({ totalCalories, recipeLabel, recipeImage }) => {
 const RecipeLink = ({ onPress, recipeLink, recipeSource }) => {
     const handlePress = () => {
         Linking.openURL(recipeLink);
-            onPress();
+        onPress();
     };
 
     return (
         <TouchableOpacity onPress={handlePress}>
-            <Text style={{ color: 'black', textDecorationLine: 'underline', fontSize: 20, marginBottom:20, textAlign: 'left' }}>{recipeSource}</Text>
+            <Text style={{ color: 'black', textDecorationLine: 'underline', fontSize: 20, marginBottom: 20, textAlign: 'left' }}>{recipeSource}</Text>
         </TouchableOpacity>
     );
 };
 
-const ModalButtons = ({ onPress, totalCalories, recipeLabel, recipeImage }) => {
+const ModalButtons = ({ onPress, totalCalories, recipeLabel, recipeImage, recipeFat, recipeCarbs, recipeProtein }) => {
     const navigation = useNavigation();
 
     const label1 = 'Calculator'
     const label2 = 'Calendar'
     const label3 = 'Cancel'
 
-    const handlePressCalculator = () => { 
+    const handlePressCalculator = () => {
         const newRecipe = {
             id: Math.random().toString(),
             title: recipeLabel,
             calories: totalCalories,
-            image: recipeImage
+            image: recipeImage,
+            fat: recipeFat,
+            carbs: recipeCarbs,
+            protein: recipeProtein
         }
         onPress()
         navigation.navigate('Calculator', { newRecipe })

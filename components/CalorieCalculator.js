@@ -8,6 +8,8 @@ export default function CalorieCalculator() {
   const [calories, setCalories] = useState(0)
   const [showSearchbar, setShowSearchbar] = useState(false)
   const [recipes, setRecipes] = useState([]);
+  const [nutrients, setNutrients] = useState({});
+  const [showNutrients, setShowNutrients] = useState(false);
 
   const route = useRoute()
 
@@ -18,12 +20,21 @@ export default function CalorieCalculator() {
     setShowSearchbar(!showSearchbar)
   }
 
+  const toggleNutrients = () => {
+    setShowNutrients(!showNutrients)
+  }
+
   useEffect(() => {
     if (newRecipe && newRecipe.title) {
       // Adds the new recipe to the recipes state
       setRecipes(prevRecipes => [...prevRecipes, newRecipe]);
       // Sums calories to previous the previous value
       setCalories(prevCalories => prevCalories + newRecipe.calories)
+      setNutrients({
+        fat: newRecipe.fat,
+        carbs: newRecipe.carbs,
+        protein: newRecipe.protein
+      })
       setShowSearchbar(!showSearchbar)
     }
   }, [newRecipe]);
@@ -52,7 +63,23 @@ export default function CalorieCalculator() {
       {!showSearchbar && (
         <>
           <View style={styles.headerItem}>
-            <Text style={styles.headerTitle}>{header}</Text>
+            <View style={styles.headerContainer}>
+              <Text style={styles.headerTitle}>{header}</Text>
+              <Button
+                style={styles.toggleButton}
+                onPress={toggleNutrients}
+                mode="contained"
+                icon={showNutrients ? "minus" : "plus"}>
+                {showNutrients ? "Hide" : "Show"} Nutrients
+              </Button>
+            </View>
+            {showNutrients && (
+              <View style={styles.nutrientsContainer}>
+                <Text>Fat: {nutrients?.fat?.quantity?.toFixed(0) ?? 0} {nutrients?.fat?.unit}</Text>
+                <Text>Carbs: {nutrients?.carbs?.quantity?.toFixed(0) ?? 0} {nutrients?.fat?.unit}</Text>
+                <Text>Protein: {nutrients?.protein?.quantity?.toFixed(0) ?? 0} {nutrients?.fat?.unit}</Text>
+              </View>
+            )}
           </View>
           <FlatList
             data={recipes}
@@ -118,7 +145,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 32,
-    textAlign: 'center',
+    textAlign: 'left',
     color: '#000000'
   },
   title: {
@@ -148,6 +175,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
+  },
+  nutrientsContainer: {
+    marginTop: 10
+  },
+  toggleButton: {
+    marginTop: 10,
   },
   rowContainer: {
     flexDirection: 'row',
