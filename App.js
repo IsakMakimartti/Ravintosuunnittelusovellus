@@ -26,11 +26,12 @@ export default function App() {
             title: "RSS",
           }}
         >
-           <Stack.Screen
+                    <Stack.Screen
             name="Home"
             component={Mainmenu}
           />
-             <Stack.Screen
+           
+           <Stack.Screen
             name="Recipebuilder"
             component={Recipebuilder}
             options={({ route }) => ({
