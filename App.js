@@ -26,6 +26,11 @@ export default function App() {
             title: "RSS",
           }}
         >
+                    <Stack.Screen
+            name="Home"
+            component={Mainmenu}
+          />
+           
            <Stack.Screen
             name="Recipebuilder"
             component={Recipebuilder}
@@ -34,11 +39,6 @@ export default function App() {
               headerTitle: route.Recipebuilder,
             })}
           />
-           <Stack.Screen
-            name="Home"
-            component={Mainmenu}
-          />
-           
              <Stack.Screen
             name="Search"
             component={Searchpage}
