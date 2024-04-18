@@ -120,6 +120,7 @@ export default function Recipebuilder() {
       setTimeout(()=>{save()},2000)
       setKey(Math.random())
     }
+}
     
     return (
         <ScrollView>
