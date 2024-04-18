@@ -88,7 +88,7 @@ export default function Recipebuilder() {
                 </View>
             </View>
             <View style={styles.addedcontainers}>
-                <Pressable style={styles.pressable} onPress={() => setModal(!modal)}>
+                <Pressable style={({pressed})=> ({opacity: pressed ? 0.5 : 1, alignItems:"center"})}  onPress={() => setModal(!modal)}>
                     <Text>Finnish Recipe</Text>
                 </Pressable>
                 <Modal visible={modal} onRequestClose={() => setModal(!modal)} transparent={true} animationType={"slide"}>
@@ -97,10 +97,10 @@ export default function Recipebuilder() {
                         <View style={styles.query}>
                             <Text style={{fontSize: 30, padding: 20}}>Complete Recipe?</Text> 
                             <View style={styles.querybuttons}>
-                                <Pressable onPress={() => handleFinnish()} style={{padding: 5, backgroundColor: "#7CFC00", alignItems:"center"}}>
+                                <Pressable onPress={() => handleFinnish()} style={({pressed})=> ({opacity: pressed ? 0.5 : 1 , padding: 5, backgroundColor: "#7CFC00", alignItems:"center"})}>
                                     <Text style={{fontSize: 20}}>Accept</Text>
                                 </Pressable>
-                                <Pressable style={{padding: 5, backgroundColor: "#FF5733", alignItems:"center"}}>
+                                <Pressable style={({pressed})=> ({opacity: pressed ? 0.5 : 1 ,padding: 5, backgroundColor: "#FF5733", alignItems:"center"})}>
                                     <Text onPress={() => setModal(!modal)} style={{fontSize: 20}}>Cancel</Text>
                                 </Pressable>
                             </View>
@@ -154,10 +154,6 @@ const styles = StyleSheet.create({
     },
     instructions: {
         width: "100%",
-    },
-    pressable: {
-        width: "40%",
-        alignItems: "center",
     },
     addedcontainers: {
         backgroundColor: "#c5ee7d",
