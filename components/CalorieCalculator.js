@@ -1,5 +1,5 @@
 import { useState, useEffect, React } from "react";
-import { StyleSheet, Text, View, FlatList, SafeAreaView } from "react-native";
+import { StyleSheet, Text, View, FlatList, SafeAreaView, Image } from "react-native";
 import { Button } from 'react-native-paper';
 import { useRoute } from '@react-navigation/native';
 import Searchbar from "./Searchbar";
@@ -24,23 +24,35 @@ export default function CalorieCalculator() {
       setRecipes(prevRecipes => [...prevRecipes, newRecipe]);
       // Sums calories to previous the previous value
       setCalories(prevCalories => prevCalories + newRecipe.calories)
+      setShowSearchbar(!showSearchbar)
     }
   }, [newRecipe]);
-  
+
   const renderRecipeItem = ({ item }) => (
     <View style={styles.item}>
-      <Text style={styles.title}>{item.title}</Text>
+      <View style={styles.rowContainer}>
+        <View style={styles.textContainer}>
+          <Text style={styles.title}>{item.title}</Text>
+        </View>
+        <View style={styles.imageContainer}>
+          <Image
+            source={{ uri: item.image }} // Assuming you have a URL for the image
+            style={styles.image}
+            resizeMode="cover"
+          />
+        </View>
+      </View>
     </View>
   )
 
-  const header = "Total calories: " + calories
+  const header = "Total calories: " + calories.toFixed(0)
 
   return (
     <SafeAreaView style={styles.container}>
       {!showSearchbar && (
         <>
           <View style={styles.headerItem}>
-            <Text style={styles.title}>{header}</Text>
+            <Text style={styles.headerTitle}>{header}</Text>
           </View>
           <FlatList
             data={recipes}
@@ -104,9 +116,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderColor: '#000000'
   },
-  title: {
+  headerTitle: {
     fontSize: 32,
     textAlign: 'center',
+    color: '#000000'
+  },
+  title: {
+    fontSize: 24,
+    textAlign: 'left',
     color: '#000000'
   },
   addButtonContainer: {
@@ -132,6 +149,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
   },
-  searchbar: {
+  rowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  imageContainer: {
+    width: 100,
+    height: 100,
+    marginRight: 10,
+  },
+  image: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
+  },
+  textContainer: {
+    flex: 1,
+    marginLeft: 10,
+    justifyContent: 'center',
   }
 });
