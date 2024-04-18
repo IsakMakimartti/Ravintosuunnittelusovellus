@@ -30,12 +30,22 @@ export default function CalorieCalculator() {
       setRecipes(prevRecipes => [...prevRecipes, newRecipe]);
       // Sums calories to previous the previous value
       setCalories(prevCalories => prevCalories + newRecipe.calories)
-      setNutrients({
-        fat: newRecipe.fat,
-        carbs: newRecipe.carbs,
-        protein: newRecipe.protein
-      })
-      setShowSearchbar(!showSearchbar)
+      // Checks if there is a previous recipe and then sums the nutrients of newRecipe
+      setNutrients(prevNutrients => ({
+        fat: {
+          quantity: (prevNutrients.fat?.quantity ?? 0) + newRecipe.fat.quantity,
+          unit: newRecipe.fat.unit
+        },
+        carbs: {
+          quantity: (prevNutrients.carbs?.quantity ?? 0) + newRecipe.carbs.quantity,
+          unit: newRecipe.carbs.unit
+        },
+        protein: {
+          quantity: (prevNutrients.protein?.quantity ?? 0) + newRecipe.protein.quantity,
+          unit: newRecipe.protein.unit
+        }
+      }));
+      setShowSearchbar(false)
     }
   }, [newRecipe]);
 
@@ -47,7 +57,7 @@ export default function CalorieCalculator() {
         </View>
         <View style={styles.imageContainer}>
           <Image
-            source={{ uri: item.image }} // Assuming you have a URL for the image
+            source={{ uri: item.image }}
             style={styles.image}
             resizeMode="cover"
           />
@@ -66,6 +76,7 @@ export default function CalorieCalculator() {
             <View style={styles.headerContainer}>
               <Text style={styles.headerTitle}>{header}</Text>
               <Button
+                textColor="#000000"
                 style={styles.toggleButton}
                 onPress={toggleNutrients}
                 mode="contained"
@@ -181,6 +192,7 @@ const styles = StyleSheet.create({
   },
   toggleButton: {
     marginTop: 10,
+    backgroundColor: '#c5ee7d',
   },
   rowContainer: {
     flexDirection: 'row',

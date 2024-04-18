@@ -59,8 +59,6 @@ export default function RecipePage({ route }) {
         );
     }
 
-    console.log(data.recipe.totalNutrients.FAT)
-
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
