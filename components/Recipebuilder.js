@@ -24,7 +24,7 @@ export default function Recipebuilder() {
             console.log(value.ingredient)
             let response = ""
                 console.log(value.ingredient.amount + value.ingredient.measurement + "%20" + value.ingredient.name)
-                let url = "https://api.edamam.com/api/nutrition-data?app_id=c6c2b88e&app_key=3088670e164afefa6e318e68dd871cb4&nutrition-type=cooking&ingr=1l%20milk" + value.ingredient.amount + value.ingredient.measurement + "%20" + value.ingredient    .name
+                let url = "https://api.edamam.com/api/nutrition-data?app_id="+process.env.nutapp_id+"&app_key="+process.env.nutapp_key+"&nutrition-type=cooking&ingr=1l%20milk" + value.ingredient.amount + value.ingredient.measurement + "%20" + value.ingredient    .name
                await fetch(url)
                  .then(async res => response = await res.json())
                 array = (
@@ -136,7 +136,7 @@ export default function Recipebuilder() {
         </View>
         </ScrollView>
     );
-}z
+}
 const styles = StyleSheet.create({
     querybuttons: {
         flexDirection: "row",

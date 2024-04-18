@@ -26,7 +26,7 @@ export default function App() {
             title: "RSS",
           }}
         >
-                 <Stack.Screen
+                        <Stack.Screen
             name="Home"
             component={Mainmenu}
           />
