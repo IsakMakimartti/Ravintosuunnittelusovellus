@@ -44,15 +44,16 @@ export default function MainMenu() {
           
             const data = await response.json();
             setData(data);
-            setLoading(false);
         } catch (error) {
             console.error("Error fetching data:", error);
-            setLoading(false);
         }
     };
     fetchdata()
 
     }, [])
+    useEffect(() => {
+      setLoading(false);
+    }, [Data])
     return (
       <SafeAreaView style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollViewContent}>

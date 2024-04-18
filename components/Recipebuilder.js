@@ -1,4 +1,4 @@
-import { Text, View, TextInput, StyleSheet, Pressable, Image, ScrollView,Modal } from 'react-native';
+import { Text, View, TextInput, StyleSheet, Pressable, Image, ScrollView,Modal,Button } from 'react-native';
 import { useState } from 'react';
 import IngredientAdder from "./IngredientAdder"
 import { firestore,collection,addDoc,userrecipes, query, onSnapshot } from '../firebase/Config';
@@ -13,28 +13,86 @@ export default function Recipebuilder() {
         setJsonArray(array)
         IngredientJsonArray.forEach((value, index)  => {
             console.log(index+1)
-            console.log(value.ingredient)
-        })
+                console.log(value.ingredient)
+            })
     }
     handleFinnish = async() => {
-     console.log("Handeled")
-     console.log(recipeInstructions)
-     console.log(recipeName)
-     console.log(IngredientJsonArray)
+        let arrayof = []; 
+        let array; 
+        IngredientJsonArray.forEach(async (value, index) => {
+            console.log(index+1)
+            console.log(value.ingredient)
+            let response = ""
+                console.log(value.ingredient.amount + value.ingredient.measurement + "%20" + value.ingredient.name)
+                let url = "https://api.edamam.com/api/nutrition-data?app_id=c6c2b88e&app_key=3088670e164afefa6e318e68dd871cb4&nutrition-type=cooking&ingr=1l%20milk" + value.ingredient.amount + value.ingredient.measurement + "%20" + value.ingredient    .name
+               await fetch(url)
+                 .then(async res => response = await res.json())
+                array = (
+                    {
+                    "data" : 
+                        {
+                         "calories" : 
+                          response.calories
+                         ,
+                         "fat" : {
+                          amount : response.totalNutrients.FAT.quantity,  
+                          unit : response.totalNutrients.FAT.unit
+                         }
+                         ,
+                         "carbohydrates" : {
+                         amount : response.totalNutrients.CHOCDF.quantity,  
+                         unit : response.totalNutrients.CHOCDF.unit
+                         }
+                        }
+                }
+            )
+            console.log(response.calories)
+            arrayof.push(array)
+        })
      setName("")
      setUsername("")
      setInstructions("")
      setJsonArray([])
+
      const save = async() => {
+        let tempcalories = 0; 
+        let tempfat = 0; 
+        let tempcarbohydrates = 0;
+        console.log(arrayof)
+        arrayof.forEach(value =>{
+                tempcalories += value.data.calories
+                tempfat += value.data.fat.amount
+                tempcarbohydrates += value.data.carbohydrates.amount
+         })
+         let temparray = (
+            {
+            "data" : 
+                {
+                 "calories" : 
+                 tempcalories
+                 ,
+                 "fat" : {
+                  amount : tempfat,  
+                  unit : "g"
+                 }
+                 ,
+                 "carbohydrates" : {
+                 amount : tempcarbohydrates,  
+                 unit : "g"
+                 }
+                }
+        }
+    )
         const docRef = await addDoc(collection(firestore, userrecipes),{
           username: username,
           name: recipeName,
           ingredients: IngredientJsonArray,
-          instructions: recipeInstructions
+          instructions: recipeInstructions,
+          nutrition: temparray,
         }).catch(error => console.log(error))
         console.log('Message saved')
       }
-      await save()
+      setTimeout(()=>{save()},2000)
       setKey(Math.random())
     }
     
@@ -78,7 +136,7 @@ export default function Recipebuilder() {
         </View>
         </ScrollView>
     );
-}
+}z
 const styles = StyleSheet.create({
     querybuttons: {
         flexDirection: "row",

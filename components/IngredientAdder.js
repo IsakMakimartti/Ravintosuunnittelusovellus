@@ -90,7 +90,6 @@ export default function Recipebuilder(props) {
                  ,
                  "measurement" : 
                   amountmes
-                 
                 }
         }
         ingredientsjson.push(jsonData)
