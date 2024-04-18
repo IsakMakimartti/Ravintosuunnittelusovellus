@@ -24,8 +24,6 @@ export default function Recipebuilder() {
         let arrayof = []; 
         let array; 
         IngredientJsonArray.forEach(async (value, index) => {
-            console.log(index+1)
-            console.log(value.ingredient)
             let response = ""
                 console.log(value.ingredient.amount + value.ingredient.measurement + "%20" + value.ingredient.name)
                 let url = "https://api.edamam.com/api/nutrition-data?app_id="+process.env.nutapp_id+"&app_key="+process.env.nutapp_key+"&nutrition-type=cooking&ingr=1l%20milk" + value.ingredient.amount + value.ingredient.measurement + "%20" + value.ingredient    .name
@@ -83,7 +81,6 @@ export default function Recipebuilder() {
         let tempcalories = 0; 
         let tempfat = 0; 
         let tempcarbohydrates = 0;
-        console.log(arrayof)
         arrayof.forEach(value =>{
                 tempcalories += value.data.calories
                 tempfat += value.data.fat.amount

@@ -8,7 +8,7 @@ import 'react-native-gesture-handler';
 
 export default function MainMenu() {
     const [Loading, setLoading] = useState(true)
-    const [Data, setData] = useState([])
+    const [Data, setData] = useState([undefined])
 
     const cusineType = ["American",
     "Asian",
@@ -48,11 +48,11 @@ export default function MainMenu() {
         }
     };
     fetchdata()
+    }, [])
 
-    }, [])
     useEffect(() => {
-      setLoading(false);
-    }, [])
+      setLoading(false)
+    }, [Data])
     return (
       <SafeAreaView style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
@@ -66,9 +66,8 @@ export default function MainMenu() {
 }
 function Foods(props){
   const navigation = useNavigation();
-  console.log(props.array.hits[2].recipe.image)
   var temparray = []; 
-  if(props.array.hits[2].recipe.image !== undefined){
+  if(props.array !== undefined){
   for(let i = 0; i < 19; i++){
     var imageUrl = props.array.hits[i].recipe.image;
     const handlePress = () => {
