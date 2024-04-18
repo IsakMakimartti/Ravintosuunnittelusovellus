@@ -45,14 +45,14 @@ export default function MainMenu() {
             setData(data);
         } catch (error) {
             console.error("Error fetching data:", error);
+        } finally {
+          setTimeout(()=>setLoading(false) + console.log(Data.length),1000)
+          
         }
     };
     fetchdata()
-    }, [])
 
-    useEffect(() => {
-      setLoading(false)
-    }, [Data])
+    }, [])
     return (
       <SafeAreaView style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
