@@ -15,6 +15,7 @@ export default function CalorieCalculator() {
 
   // Default value is an empty array, otherwise assigns the values from route.params
   const { newRecipe = {} } = route.params || {};
+  const { newUserRecipe = {} } = route.params || {};
 
   const toggleSearchbar = () => {
     setShowSearchbar(!showSearchbar)
@@ -48,6 +49,31 @@ export default function CalorieCalculator() {
       setShowSearchbar(false)
     }
   }, [newRecipe]);
+
+  useEffect(() => {
+    if (newUserRecipe && newUserRecipe.title) {
+      // Adds the new user recipe to the recipes state
+      setRecipes(prevRecipes => [...prevRecipes, newUserRecipe]);
+      // Sums calories to previous the previous value
+      setCalories(prevCalories => prevCalories + newUserRecipe.calories)
+      // Checks if there is a previous user recipe and then sums the nutrients of newRecipe
+      setNutrients(prevNutrients => ({
+        fat: {
+          quantity: (prevNutrients.fat?.quantity ?? 0) + newUserRecipe.fat.quantity,
+          unit: newUserRecipe.fat.unit
+        },
+        carbs: {
+          quantity: (prevNutrients.carbs?.quantity ?? 0) + newUserRecipe.carbs.quantity,
+          unit: newUserRecipe.carbs.unit
+        },
+        protein: {
+          quantity: (prevNutrients.protein?.quantity ?? 0) + newUserRecipe.protein.quantity,
+          unit: newUserRecipe.protein.unit
+        }
+      }));
+      setShowSearchbar(false)
+    }
+  }, [newUserRecipe]);
 
   const renderRecipeItem = ({ item }) => (
     <View style={styles.item}>
