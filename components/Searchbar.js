@@ -85,12 +85,20 @@ export default function Searchbar() {
                         <Text style={{ fontSize: 20, marginTop: 10, marginBottom: 10 }}>{modaldata.instructions}</Text>
                         <Text style={styles.modalheader}>Ingredients</Text>
                         <MapArray />
+                        <AddToCalculatorButton
+                            title={modaldata.name}
+                            calories={modaldata.nutrition.data.calories}
+                            protein={modaldata.nutrition.data.carbohydrates}
+                            carbs= {modaldata.nutrition.data.fat}
+                            fat={modaldata.nutrition.data.protein}
+                        />
                         <Pressable style={{ width: "100%", alignItems: "center", marginTop: 20, backgroundColor: "rgba(255,0,0,0.7)" }} onPress={() => ismodal(!modal)}><Text>Close</Text></Pressable>
                     </View>
                 </View>
             </Modal>
         );
     }
+
     function usernameonlick(){
         ismodal(false)
         setInput(modaldata.username) 
@@ -205,6 +213,29 @@ export default function Searchbar() {
             temparray.push(<></>)
         }
         return temparray
+    }
+    function AddToCalculatorButton ({ title, calories, protein, carbs, fat }) {
+        console.log(calories)
+        console.log(protein)
+        console.log(carbs)
+        console.log(fat)
+
+        const handlePress = () => {
+            const newUserRecipe = {
+                id: Math.random().toString(),
+                title: title,
+                calories: calories,
+                protein: protein,
+                carbs: carbs,
+                fat: fat
+            }
+            ismodal(!modal)
+        }
+
+        return (
+                 <Pressable style={{ width: "100%", alignItems: "center", marginTop: 20, backgroundColor: "rgba(255,0,0,0.7)" }} onPress={handlePress}><Text>Add</Text></Pressable>
+        )
+
     }
 }
 function recipesend(id, nav) {
