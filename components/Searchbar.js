@@ -85,12 +85,20 @@ export default function Searchbar() {
                         <Text style={{ fontSize: 20, marginTop: 10, marginBottom: 10 }}>{modaldata.instructions}</Text>
                         <Text style={styles.modalheader}>Ingredients</Text>
                         <MapArray />
+                        <AddToCalculatorButton
+                            title={modaldata.name}
+                            recipeCalories={modaldata.nutrition.data.calories}
+                            recipeProtein={modaldata.nutrition.data.carbohydrates}
+                            recipeCarbs= {modaldata.nutrition.data.fat}
+                            recipeFat={modaldata.nutrition.data.protein}
+                        />
                         <Pressable style={{ width: "100%", alignItems: "center", marginTop: 20, backgroundColor: "rgba(255,0,0,0.7)" }} onPress={() => ismodal(!modal)}><Text>Close</Text></Pressable>
                     </View>
                 </View>
             </Modal>
         );
     }
+
     function usernameonlick(){
         ismodal(false)
         setInput(modaldata.username) 
@@ -205,6 +213,38 @@ export default function Searchbar() {
             temparray.push(<></>)
         }
         return temparray
+    }
+    function AddToCalculatorButton ({ title, recipeCalories, recipeProtein, recipeCarbs, recipeFat }) {
+        const fat = {
+            quantity: recipeFat.amount,
+            unit: recipeFat.unit
+        }
+        const carbs = {
+            quantity: recipeCarbs.amount,
+            unit: recipeCarbs.unit
+        }
+        const protein = {
+            quantity: recipeProtein.amount,
+            unit: recipeProtein.unit
+        }
+
+        const handlePress = () => {
+            const newUserRecipe = {
+                id: Math.random().toString(),
+                title: title,
+                calories: recipeCalories,
+                protein: protein,
+                carbs: carbs,
+                fat: fat
+            }
+            ismodal(!modal)
+            navigation.navigate('Calculator', { newUserRecipe })
+        }
+        
+        return (
+                 <Pressable style={{ width: "100%", alignItems: "center", marginTop: 20, backgroundColor: "rgba(255,0,0,0.7)" }} onPress={handlePress}><Text>Add to calculator</Text></Pressable>
+        )
+
     }
 }
 function recipesend(id, nav) {
