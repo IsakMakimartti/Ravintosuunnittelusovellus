@@ -44,6 +44,10 @@ export default function Recipebuilder() {
                          "carbohydrates" : {
                          amount : response.totalNutrients.CHOCDF.quantity,  
                          unit : response.totalNutrients.CHOCDF.unit
+                         },
+                         "protein": {
+                            amount : response.totalNutrients.PROCNT.quantity,  
+                            unit : response.totalNutrients.PROCNT.unit,  
                          }
                         }
                 }
@@ -81,10 +85,12 @@ export default function Recipebuilder() {
         let tempcalories = 0; 
         let tempfat = 0; 
         let tempcarbohydrates = 0;
+        let tempprotein = 0;
         arrayof.forEach(value =>{
                 tempcalories += value.data.calories
                 tempfat += value.data.fat.amount
                 tempcarbohydrates += value.data.carbohydrates.amount
+                tempprotein += value.data.protein.amount
          })
          let temparray = (
             {
@@ -101,6 +107,10 @@ export default function Recipebuilder() {
                  "carbohydrates" : {
                  amount : tempcarbohydrates,  
                  unit : "g"
+                 },
+                 "protein": {
+                    amount : tempprotein,
+                    unit : "g"
                  }
                 }
         }
@@ -110,6 +120,7 @@ export default function Recipebuilder() {
           name: recipeName,
           ingredients: IngredientJsonArray,
           instructions: recipeInstructions,
+          keywords: keywordarray,
           nutrition: temparray,
         }).catch(error => console.log(error))
         console.log('Message saved')
