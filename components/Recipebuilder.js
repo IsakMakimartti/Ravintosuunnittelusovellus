@@ -21,6 +21,7 @@ export default function Recipebuilder() {
             })
     }
     handleFinnish = async() => {
+        if(recipeName.length<1 || username.length<1 || recipeInstructions.length<1){
         let arrayof = []; 
         let array; 
         IngredientJsonArray.forEach(async (value, index) => {
@@ -110,7 +111,7 @@ export default function Recipebuilder() {
                  },
                  "protein": {
                     amount : tempprotein,
-                    unit : "g"
+                    unit : "g   "
                  }
                 }
         }
@@ -127,6 +128,10 @@ export default function Recipebuilder() {
       }
       setTimeout(()=>{save()},2000)
       setKey(Math.random())
+    } else {
+        setAccepted(false)
+        setTimeout(()=>{setAccepted(true) + setModal(false)}, 2000)
+    }
     }
 }
     
@@ -167,7 +172,7 @@ export default function Recipebuilder() {
                                 </Pressable>
                             </View>
                         </View>
-                        : <View style={styles.query}><Text style={{fontSize: 20, padding: 40, color: "#FF0000"}}>Please check that all the fields contain something!</Text></View>
+                        : <View style={styles.query}><Text style={{fontSize: 20, padding: 40}}>Please check that all the fields contain something!</Text></View>
 }
                     </View>
                 </Modal>
