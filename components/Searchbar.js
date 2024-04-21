@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getDocs, firestore, collection, userrecipes, query, where } from '../firebase/Config';
 import { StyleSheet, Text, TextInput, View, Image, Pressable, ScrollView, Modal, Keyboard } from 'react-native';
 import { Button } from 'react-native-paper';
@@ -7,6 +7,7 @@ import { cuisineType } from "../data/random.json"
 import { useNavigation } from '@react-navigation/native';
 import AlertModal from './Alert'
 export default function Searchbar() {
+    
     const navigation = useNavigation();
     const [inputText, setInput] = useState("")
     const [responsearray, setArray] = useState([undefined])
@@ -16,12 +17,13 @@ export default function Searchbar() {
     const [modaldata, setdata] = useState([])
     const [alert, setalert] = useState(false)
     const [loaded, setloaded] = useState(false)
+    const [focus, setfocus] = useState(Keyboard.isVisible())
 
     return (
         <View style={{ flex: 1 }}>
             <View style={styles.row}>
-                <TextInput returnKeyType="done" autoCapitalize="none" onSubmitEditing={() => inputText.length > 3 ? APIsearch() : alertuser()} value={inputText} onChangeText={text => setInput(text.replace())} style={styles.input} placeholder='Search...'></TextInput>
-                <Pressable onPress={() => inputText.length > 3 ? APIsearch() + Keyboard.dismiss() : alertuser()} style={styles.press}>
+                <TextInput returnKeyType="done" onFocus={()=>setfocus(true)} onBlur={()=>setfocus(false)} autoCapitalize="none" onSubmitEditing={() => inputText.length > 3 ? APIsearch() : alertuser()} value={inputText} onChangeText={text => setInput(text.replace())} style={styles.input} placeholder='Search...'></TextInput>
+                <Pressable onPress={() => inputText.length > 3 ? APIsearch() + Keyboard.dismiss() + setfocus(false) : alertuser()}  >
                     <Image style={styles.image} source={require('../assets/magnifying-glass-16.png')} />
                 </Pressable>
             </View>
@@ -50,12 +52,16 @@ export default function Searchbar() {
             </View>
         </View>
     );
+    
     function alertuser() {
         setalert(!alert)
         setTimeout(() => {
             setalert(false)
         }, 4000)
     }
+    function _keyboardDidHide () {
+        console.log('Keyboard Hidden');
+      }
     async function usersearch(string) {
         setArray([])
         setloaded(false)
@@ -317,11 +323,6 @@ const styles = StyleSheet.create({
         borderColor: "#ccc",
         borderWidth: 0.6,
         flexGrow: 1,
-    },
-    press: {
-        flexBasis: '20%',
-        height: "20%",
-        alignItems: 'flex-end'
     },
     row: {
         flexDirection: 'row',
