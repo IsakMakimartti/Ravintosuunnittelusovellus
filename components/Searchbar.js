@@ -37,7 +37,7 @@ export default function Searchbar() {
         <View style={{ flex: 1 }}>
             <View style={styles.row}>
                 <TextInput returnKeyType="done" autoCapitalize="none" onSubmitEditing={() => inputText.length > 3 ? APIsearch() : alertuser()} value={inputText} onChangeText={text => setInput(text.replace())} style={styles.input} placeholder='Search...'></TextInput>
-                <Pressable onPress={() => inputText.length > 3 ? APIsearch() + Keyboard.dismiss() + setfocus(false) : alertuser()}  >
+                <Pressable style={{ flexBasis: '15%'}}onPress={() => inputText.length > 3 ? APIsearch() + Keyboard.dismiss() + setfocus(false) : alertuser()}>
                     <Image style={styles.image} source={require('../assets/magnifying-glass-16.png')} />
                 </Pressable>
             </View>
@@ -360,8 +360,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#FF9999"
     },
     input: {
-        flexBasis: '80%',
-        width: '80%',
+        flexBasis: '85%',
+        width: '100%',
         height: 50,
         fontSize: 20,
     },
