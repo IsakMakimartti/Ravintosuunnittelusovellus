@@ -6,6 +6,7 @@ import { Button } from 'react-native-paper';
 import { cuisineType } from "../data/random.json"
 import { useNavigation } from '@react-navigation/native';
 import AlertModal from './Alert'
+import Options from './Options';
 export default function Searchbar() {
     
     const navigation = useNavigation();
@@ -18,15 +19,31 @@ export default function Searchbar() {
     const [alert, setalert] = useState(false)
     const [loaded, setloaded] = useState(false)
     const [focus, setfocus] = useState(Keyboard.isVisible())
-
+    const [options, setOptions] = useState([])
+    useEffect(() => {
+        const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+            setfocus(true);
+        });
+        const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+            setfocus(false);
+        });
+    
+        return () => {
+          showSubscription.remove();
+          hideSubscription.remove();
+        };
+      }, []);
     return (
         <View style={{ flex: 1 }}>
             <View style={styles.row}>
-                <TextInput returnKeyType="done" onFocus={()=>setfocus(true)} onBlur={()=>setfocus(false)} autoCapitalize="none" onSubmitEditing={() => inputText.length > 3 ? APIsearch() : alertuser()} value={inputText} onChangeText={text => setInput(text.replace())} style={styles.input} placeholder='Search...'></TextInput>
+                <TextInput returnKeyType="done" autoCapitalize="none" onSubmitEditing={() => inputText.length > 3 ? APIsearch() : alertuser()} value={inputText} onChangeText={text => setInput(text.replace())} style={styles.input} placeholder='Search...'></TextInput>
                 <Pressable onPress={() => inputText.length > 3 ? APIsearch() + Keyboard.dismiss() + setfocus(false) : alertuser()}  >
                     <Image style={styles.image} source={require('../assets/magnifying-glass-16.png')} />
                 </Pressable>
             </View>
+            { focus ? <View><Options options={options} setOptions={setOptions}/></View> : <View></View>
+
+            }
             { loaded ?
                 <View style={{ maxHeight: 240 }}>
                     <View style={{ flexShrink: 1 }}>
@@ -143,6 +160,10 @@ export default function Searchbar() {
         var response = "";
         var parsedinput = inputText.replace(" ", "%20")
         url = "https://api.edamam.com/api/recipes/v2?type=public&q=" + inputText + "&app_id=" + process.env.app_id + "&app_key=" + process.env.app_KEY
+        options.forEach(value => {
+        url += "&health=" + value
+        })
+        console.log(url)
         await fetch(url)
             .then(async res => response = await res.json())
             .catch(error => console.log(error))
@@ -289,9 +310,9 @@ const styles = StyleSheet.create({
     safearea: {
         width: 20,
     },
-    scrollArea: {
-        flex: 1,
-    },
+    scrollArea: {   
+        flex: 1,    
+    },  
     RandomResultContainer: {
         flex: 1,
     },
