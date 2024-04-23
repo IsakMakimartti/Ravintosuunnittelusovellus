@@ -8,7 +8,7 @@ import 'react-native-gesture-handler';
 
 export default function MainMenu() {
     const [Loading, setLoading] = useState(true)
-    const [Data, setData] = useState([])
+    const [Data, setData] = useState([undefined])
 
     const cusineType = ["American",
     "Asian",
@@ -43,12 +43,11 @@ export default function MainMenu() {
             console.log(fetchurl)
             const data = await response.json();
             setData(data);
-            setLoading(false)
         } catch (error) {
             console.error("Error fetching data:", error);
-            setLoading(false);
         } finally {
-          setTimeout(()=>setLoading(false),500)
+          setTimeout(()=>setLoading(false) + console.log(Data.length),1000)
+          
         }
     };
     fetchdata()
@@ -67,9 +66,8 @@ export default function MainMenu() {
 }
 function Foods(props){
   const navigation = useNavigation();
-  console.log(props.array.hits[2].recipe.image)
   var temparray = []; 
-  if(props.array.hits[2].recipe.image !== undefined){
+  if(props.array !== undefined){
   for(let i = 0; i < 19; i++){
     var imageUrl = props.array.hits[i].recipe.image;
     const handlePress = () => {
@@ -141,14 +139,16 @@ const styles = StyleSheet.create({
   },
   imageText: {
     position: 'absolute',
-    bottom: 160,
+    bottom: 100,
     left: 0,
     right: 0,
     color: 'white',
     textAlign: 'center',
     padding: 5,
     fontSize: 40,
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: { width: 3, height: 3 },
     textShadowRadius: 6,
+    maxHeight: 260,
   },
 });

@@ -26,7 +26,7 @@ export default function Recipebuilder(props) {
         <View>
             <View style={styles.padding}>
                 <View style={styles.addedcontainers}>
-                    <Pressable style={styles.pressable} onPress={() => setopen(!openmodal)}>
+                    <Pressable style={({pressed})=> ({opacity: pressed ? 0.5 : 1, alignItems:"center"})} onPress={() => setopen(!openmodal)}>
                         <Image style={styles.image} source={require('../assets/plus-icon.png')}></Image>
                     </Pressable>
                     <Modal visible={openmodal} onRequestClose={() => setopen(!openmodal)} transparent={true} animationType={"slide"}>
@@ -43,10 +43,10 @@ export default function Recipebuilder(props) {
                                 />
                             <TextInput placeholder="Amount" onChangeText={text => setamount(text)} value={amountinput} style={styles.modalinput}></TextInput>
                                 <View style={{ flex: 1, width: "100%", flexDirection: "row", justifyContent: "space-between" }}>
-                                    <Pressable style={styles.modalpressable} onPress={addIngredient}>
+                                    <Pressable style={({pressed})=> ({opacity: pressed ? 0.8 : 1, height: 70,width: "40%"})} onPress={addIngredient}>
                                         <Text style={{ padding: 20, fontSize: 20, backgroundColor: "#c5ee7d", textAlign: "center" }}> Add </Text>
                                     </Pressable>
-                                    <Pressable style={styles.modalpressable} onPress={() => setopen(!openmodal)}>
+                                    <Pressable style={({pressed})=> ({opacity: pressed ? 0.8 : 1, height: 70,width: "40%"})} onPress={() => setopen(!openmodal)}>
                                         <Text style={{ padding: 20, fontSize: 20, backgroundColor: "#c5ee7d", textAlign: "center" }}> Cancel </Text>
                                     </Pressable>
                                 </View>
@@ -88,7 +88,6 @@ export default function Recipebuilder(props) {
                  ,
                  "measurement" : 
                   amountmes
-                 
                 }
         }
         ingredientsjson.push(jsonData)
@@ -223,10 +222,6 @@ const styles = StyleSheet.create({
     },
     instructions: {
         width: "100%",
-    },
-    pressable: {
-        width: "40%",
-        alignItems: "center",
     },
     addedcontainers: {
         backgroundColor: "#c5ee7d",

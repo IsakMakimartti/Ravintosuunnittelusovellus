@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, Dimensions, SafeAreaView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, Dimensions, SafeAreaView, TouchableOpacity, Linking } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import Modal from 'react-native-modal';
 import 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 
 export default function RecipePage({ route }) {
     const { id } = route.params;
@@ -12,7 +13,11 @@ export default function RecipePage({ route }) {
     const [calories, setCalories] = useState(null);
 
     const handleButtonPress = () => {
-        console.log('Button pressed');
+        console.log('Add button pressed');
+    };
+    const handlePress = () => {
+
+        Linking.openURL(data.recipe.url);
     };
 
     const handleIngredientPress = async (quantity, measure, food) => {
@@ -60,7 +65,14 @@ export default function RecipePage({ route }) {
                 <Text style={styles.label}>{data.recipe.label}</Text>
                 <Image style={styles.image} source={{ uri: data.recipe.image }} />
                 <View style={styles.ingredientBox}>
-                    <AddRecipeButton onPress={handleButtonPress} />
+                    <AddRecipeButton
+                        totalCalories={data.recipe.calories}
+                        recipeLabel={data.recipe.label}
+                        recipeImage={data.recipe.images.SMALL.url}
+                        recipeFat={data.recipe.totalNutrients.FAT}
+                        recipeCarbs={data.recipe.totalNutrients.CHOCDF}
+                        recipeProtein={data.recipe.totalNutrients.PROCNT}
+                    />
                     <Text style={styles.subLabel}>Ingredients</Text>
                     {data.recipe.ingredientLines.map((ingredientLine, index) => {
                         const [quantity, measure, ...foods] = ingredientLine.split(' ');
@@ -85,6 +97,10 @@ export default function RecipePage({ route }) {
                             </TouchableOpacity>
                         );
                     })}
+                </View>
+                <Text style={styles.subLabel}>Source</Text>
+                <View style={{ width: imageWidth }}>
+                    <RecipeLink onPress={handlePress} recipeLink={data.recipe.url} recipeSource={data.recipe.source} />
                 </View>
                 <Text style={styles.subLabel}>Nutritional values</Text>
                 <View style={styles.ingredientBox}>
@@ -114,15 +130,12 @@ export default function RecipePage({ route }) {
     );
 }
 
-const AddRecipeButton = ({ onPress }) => {
-    const [active, setActive] = useState(false);
+const AddRecipeButton = ({ totalCalories, recipeLabel, recipeImage, recipeFat, recipeCarbs, recipeProtein }) => {
     const [modalButtonsVisible, setModalButtonsVisible] = useState(false);
-    const label = active ? 'Active' : 'Add';
+    const label = 'Add';
 
     const handlePress = () => {
-        setActive(!active);
         setModalButtonsVisible(!modalButtonsVisible)
-        onPress();
     };
 
     return (
@@ -140,25 +153,63 @@ const AddRecipeButton = ({ onPress }) => {
                 }}
             >
                 <View style={styles.modalButtonsContainer}>
-                    <ModalButtons onPress={handlePress} />
+                    <ModalButtons
+                        onPress={handlePress}
+                        totalCalories={totalCalories}
+                        recipeLabel={recipeLabel}
+                        recipeImage={recipeImage}
+                        recipeFat={recipeFat}
+                        recipeCarbs={recipeCarbs}
+                        recipeProtein={recipeProtein}
+                    />
                 </View>
             </Modal>
         </View>
     );
 };
 
-const ModalButtons = ({ onPress }) => {
-    const label1 = 'Calculator'
-    const label2 = 'Calendar'
-    const label3 = 'Cancel'
-
+const RecipeLink = ({ onPress, recipeLink, recipeSource }) => {
     const handlePress = () => {
+        Linking.openURL(recipeLink);
         onPress();
     };
 
     return (
+        <TouchableOpacity onPress={handlePress}>
+            <Text style={{ color: 'black', textDecorationLine: 'underline', fontSize: 20, marginBottom: 20, textAlign: 'left' }}>{recipeSource}</Text>
+        </TouchableOpacity>
+    );
+};
+
+const ModalButtons = ({ onPress, totalCalories, recipeLabel, recipeImage, recipeFat, recipeCarbs, recipeProtein }) => {
+    const navigation = useNavigation();
+
+    const label1 = 'Calculator'
+    const label2 = 'Calendar'
+    const label3 = 'Cancel'
+
+    const handlePressCalculator = () => {
+        const newRecipe = {
+            id: Math.random().toString(),
+            title: recipeLabel,
+            calories: totalCalories,
+            image: recipeImage,
+            fat: recipeFat,
+            carbs: recipeCarbs,
+            protein: recipeProtein
+        }
+        onPress()
+        navigation.navigate('Calculator', { newRecipe })
+    };
+
+    // Testing, just closes modal
+    const handlePress = () => {
+        onPress()
+    }
+
+    return (
         <View style={styles.modalButtonsView}>
-            <TouchableOpacity onPress={handlePress} style={[styles.button, styles.modalButtons]}>
+            <TouchableOpacity onPress={handlePressCalculator} style={[styles.button, styles.modalButtons]}>
                 <Text style={{ textAlign: 'center' }}>{label1}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handlePress} style={[styles.button, styles.modalButtons]}>
