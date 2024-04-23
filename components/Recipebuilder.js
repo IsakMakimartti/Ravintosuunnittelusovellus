@@ -151,7 +151,7 @@ export default function Recipebuilder() {
             </View>
             <View style={styles.addedcontainers}>
                 <Pressable style={({pressed})=> ({opacity: pressed ? 0.5 : 1, alignItems:"center"})}  onPress={() => setModal(!modal)}>
-                    <Text>Finnish Recipe</Text>
+                    <Text>Finish Recipe</Text>
                 </Pressable>
                 <Modal visible={modal} onRequestClose={() => setModal(!modal)} transparent={true} animationType={"slide"}>
                     <View style={styles.modal}>
