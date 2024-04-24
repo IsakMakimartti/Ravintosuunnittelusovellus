@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, Dimensions, SafeAreaView, TouchableOpacity, Linking } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, Dimensions, SafeAreaView, TouchableOpacity, Linking, Alert } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import Modal from 'react-native-modal';
 import 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+
 
 export default function RecipePage({ route }) {
     const { id } = route.params;
@@ -16,7 +19,6 @@ export default function RecipePage({ route }) {
         console.log('Add button pressed');
     };
     const handlePress = () => {
-
         Linking.openURL(data.recipe.url);
     };
 
@@ -66,6 +68,7 @@ export default function RecipePage({ route }) {
                 <Image style={styles.image} source={{ uri: data.recipe.image }} />
                 <View style={styles.ingredientBox}>
                     <AddRecipeButton
+                        id={id}
                         totalCalories={data.recipe.calories}
                         recipeLabel={data.recipe.label}
                         recipeImage={data.recipe.images.SMALL.url}
@@ -130,7 +133,7 @@ export default function RecipePage({ route }) {
     );
 }
 
-const AddRecipeButton = ({ totalCalories, recipeLabel, recipeImage, recipeFat, recipeCarbs, recipeProtein }) => {
+const AddRecipeButton = ({ id, totalCalories, recipeLabel, recipeImage, recipeFat, recipeCarbs, recipeProtein }) => {
     const [modalButtonsVisible, setModalButtonsVisible] = useState(false);
     const label = 'Add';
 
@@ -154,6 +157,7 @@ const AddRecipeButton = ({ totalCalories, recipeLabel, recipeImage, recipeFat, r
             >
                 <View style={styles.modalButtonsContainer}>
                     <ModalButtons
+                        id={id}
                         onPress={handlePress}
                         totalCalories={totalCalories}
                         recipeLabel={recipeLabel}
@@ -181,12 +185,16 @@ const RecipeLink = ({ onPress, recipeLink, recipeSource }) => {
     );
 };
 
-const ModalButtons = ({ onPress, totalCalories, recipeLabel, recipeImage, recipeFat, recipeCarbs, recipeProtein }) => {
+const ModalButtons = ({id, onPress, totalCalories, recipeLabel, recipeImage, recipeFat, recipeCarbs, recipeProtein }) => {
     const navigation = useNavigation();
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [showSaveButton, setShowSaveButton] = useState(false);
 
     const label1 = 'Calculator'
     const label2 = 'Calendar'
-    const label3 = 'Cancel'
+    const label3 = 'Save'
+    const label4 = 'Cancel'
 
     const handlePressCalculator = () => {
         const newRecipe = {
@@ -202,22 +210,64 @@ const ModalButtons = ({ onPress, totalCalories, recipeLabel, recipeImage, recipe
         navigation.navigate('Calculator', { newRecipe })
     };
 
-    // Testing, just closes modal
-    const handlePress = () => {
-        onPress()
-    }
+    const handlePressCalendar = async () => {
+        const recipeId = id;
+        const recipeDate = selectedDate ? selectedDate.toDateString() : new Date().toDateString();
+        const recipeTitle = recipeLabel;
+    
+        try {
+            const savedRecipesJSON = await AsyncStorage.getItem('savedRecipes');
+            const savedRecipes = savedRecipesJSON ? JSON.parse(savedRecipesJSON) : [];
+            
+            const existingRecipeIndex = savedRecipes.findIndex(recipe => recipe.recipeId === recipeId && recipe.recipeDate === recipeDate);
+    
+            if (existingRecipeIndex !== -1) {
+                Alert.alert('Recipe Already Saved', 'This recipe has already been saved for this date.');
+            } else {
+                navigation.navigate('Calendar', { recipeId, recipeDate, recipeTitle });
+            }
+        } catch (error) {
+            console.error('Error checking saved recipes:', error);
+        }
+    };
+
+    const handlePressCancel = () => {
+        onPress();
+    };
+
+    useEffect(() => {
+        if (selectedDate) {
+            setShowSaveButton(true);
+        } else {
+            setShowSaveButton(false);
+        }
+    }, [selectedDate]);
 
     return (
         <View style={styles.modalButtonsView}>
             <TouchableOpacity onPress={handlePressCalculator} style={[styles.button, styles.modalButtons]}>
                 <Text style={{ textAlign: 'center' }}>{label1}</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={handlePress} style={[styles.button, styles.modalButtons]}>
+            <TouchableOpacity onPress={() => setDatePickerVisibility(true)} style={[styles.button, styles.modalButtons]}>
                 <Text style={{ textAlign: 'center' }}>{label2}</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={handlePress} style={[styles.button, styles.modalButtons]}>
-                <Text style={{ textAlign: 'center' }}>{label3}</Text>
+            {showSaveButton && (
+                <TouchableOpacity onPress={handlePressCalendar} style={[styles.button, styles.modalButtons]}>
+                    <Text style={{ textAlign: 'center' }}>{label3}</Text>
+                </TouchableOpacity>
+            )}
+            <TouchableOpacity onPress={handlePressCancel} style={[styles.button, styles.modalButtons]}>
+                <Text style={{ textAlign: 'center' }}>{label4}</Text>
             </TouchableOpacity>
+            <DateTimePickerModal
+                isVisible={isDatePickerVisible}
+                mode="date"
+                onConfirm={(date) => {
+                    setSelectedDate(date);
+                    setDatePickerVisibility(false);
+                }}
+                onCancel={() => setDatePickerVisibility(false)}
+            />
         </View>
     );
 };
