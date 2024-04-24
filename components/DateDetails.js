@@ -37,7 +37,6 @@ const DateDetails = ({ route, navigation }) => {
     };
 
     const removeRecipe = async (recipeId, recipeDate) => {
-        console.log("Removing recipe:", recipeId, "for date:", recipeDate); // Check if function is triggered and parameters are correct
         Alert.alert(
             'Confirm',
             'Are you sure you want to remove this recipe?',
@@ -51,16 +50,10 @@ const DateDetails = ({ route, navigation }) => {
                     onPress: async () => {
                         try {
                             const savedRecipesJSON = await AsyncStorage.getItem('savedRecipes');
-                            console.log("Saved recipes JSON:", savedRecipesJSON); // Check if saved recipes are retrieved
                             if (savedRecipesJSON) {
                                 let savedRecipes = JSON.parse(savedRecipesJSON);
-                                console.log("Saved recipes before removal:", savedRecipes); // Check saved recipes before removal
-                                // Filter out the recipe to be removed
                                 savedRecipes = savedRecipes.filter(recipe => !(recipe.recipeId === recipeId && recipe.recipeDate === recipeDate));
-                                console.log("Saved recipes after removal:", savedRecipes); // Check saved recipes after removal
-                                // Update AsyncStorage with the new saved recipes
                                 await AsyncStorage.setItem('savedRecipes', JSON.stringify(savedRecipes));
-                                console.log("Recipes removed successfully.");
                                 setSavedRecipes(savedRecipes);
                                 navigation.navigate('Calendar');
                             }

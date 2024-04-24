@@ -47,7 +47,6 @@ export default function Calendar({ navigation }) {
 
             await AsyncStorage.setItem('savedRecipes', JSON.stringify(savedRecipes));
 
-            console.log('Saved recipe:', recipeId, 'for date:', recipeDate, 'with the title:', recipeTitle);
             Alert.alert('', 'Recipe saved successfully');
             fetchRecipesForWeek(currentDate);
         } catch (error) {
