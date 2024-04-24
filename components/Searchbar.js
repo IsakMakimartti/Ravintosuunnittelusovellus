@@ -94,20 +94,27 @@ export default function Searchbar() {
         setloaded(true)
     }
     function ModalComponent() {
+        round1 = modaldata.nutrition.data.carbohydrates.amount.toFixed(1)
+        round2 = modaldata.nutrition.data.fat.amount.toFixed(1)
         return (
             <Modal visible={modal} onRequestClose={() => ismodal(!modal)} transparent={true} animationType={"slide"}>
+                <ScrollView style={{ flex: 1, alignContent: "center", alignSelf: "center"}}>
                 <View style={{ flex: 1, alignContent: "center", alignSelf: "center", justifyContent: "center" }}>
                     <View style={styles.modal}>
                         <Text style={styles.modalheader}>Recipe</Text>
-                        <Text style={{ fontSize: 30, marginBottom: 10 }}>{modaldata.name}</Text>
+                        <Text style={{ fontSize: 30, marginBottom: 5 }}>{modaldata.name}</Text>
                         <Text style={styles.modalheader}>User</Text>
                         <Pressable onPress={usernameonlick}>
-                            <Text style={{ fontSize: 20, marginBottom: 10 }}>{modaldata.username}</Text>
+                            <Text style={{ fontSize: 20, marginBottom: 5 }}>{modaldata.username}</Text>
                         </Pressable>
                         <Text style={styles.modalheader}>Instructions</Text>
-                        <Text style={{ fontSize: 20, marginTop: 10, marginBottom: 10 }}>{modaldata.instructions}</Text>
+                        <Text style={{ fontSize: 20, marginTop: 5, marginBottom: 5 }}>{modaldata.instructions}</Text>
                         <Text style={styles.modalheader}>Ingredients</Text>
                         <MapArray />
+                        <Text style={styles.modalheader}>Nutrition</Text>
+                        <Text style={{ fontSize: 15, marginTop: 5, marginBottom: 5 }}>Protein : {modaldata.nutrition.data.calories}</Text>
+                        <Text style={{ fontSize: 15, marginTop: 5, marginBottom: 5 }}>Carbohydrates : {round1} g</Text>
+                        <Text style={{ fontSize: 15, marginTop: 5, marginBottom: 5}}>Fat : {round2} g</Text>
                         <AddToCalculatorButton
                             title={modaldata.name}
                             recipeCalories={modaldata.nutrition.data.calories}
@@ -115,9 +122,10 @@ export default function Searchbar() {
                             recipeCarbs= {modaldata.nutrition.data.fat}
                             recipeFat={modaldata.nutrition.data.protein}
                         />
-                        <Pressable style={{ width: "100%", alignItems: "center", marginTop: 20, backgroundColor: "rgba(255,0,0,0.7)" }} onPress={() => ismodal(!modal)}><Text>Close</Text></Pressable>
+                        <Pressable style={{ width: "100%", alignItems: "center", marginTop: 10, backgroundColor: "rgba(255,0,0,0.7)" }} onPress={() => ismodal(!modal)}><Text>Close</Text></Pressable>
                     </View>
                 </View>
+                </ScrollView>
             </Modal>
         );
     }
@@ -139,7 +147,7 @@ export default function Searchbar() {
         var temparray = []
         modaldata.ingredients.forEach((value, index) => {
             temparray.push(
-                <View key={"2" + index} style={{ borderWidth: 0.3, width: "100%", alignItems: "center", padding: 10 }}><Text style={{ fontSize: 15 }}>{value.ingredient.name} {value.ingredient.amount}{value.ingredient.measurement}</Text></View>
+                <View key={"2" + index} style={{ borderWidth: 0.1, width: "100%", alignItems: "center", padding: 10, marginBottom: 1 }}><Text style={{ fontSize: 15 }}>{value.ingredient.name} {value.ingredient.amount}{value.ingredient.measurement}</Text></View>
             )
         })
         return temparray
