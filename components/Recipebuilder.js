@@ -124,6 +124,8 @@ export default function Recipebuilder() {
           nutrition: temparray,
         }).catch(error => console.log(error))
         console.log('Message saved')
+        alert(true)
+        setTimeout(()=>{alert(false)},2000)
       }
       setTimeout(()=>{save()},2000)
       setKey(Math.random())
