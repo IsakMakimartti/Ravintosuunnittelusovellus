@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DateDetails = ({ route, navigation }) => {
@@ -80,29 +80,36 @@ const DateDetails = ({ route, navigation }) => {
     }, [parsedDate, navigation]);
 
     return (
-        <View style={styles.container}>
-            {savedRecipes.length > 0 ? (
-                <>
-                    <Text style={styles.sectionTitle}>Your saved recipes for {parsedDate.toLocaleDateString('en-US', { weekday: 'long' })} {parsedDate.getDate()}:</Text>
-                    {savedRecipes.map((recipe, index) => (
-                        <View key={index} style={styles.recipeItem}>
-                            <TouchableOpacity onPress={() => navigateToRecipe(recipe.recipeId)}>
-                                <Text style={styles.recipeTitle}>{recipe.recipeTitle}</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => removeRecipe(recipe.recipeId, parsedDate.toDateString())} style={styles.removeButton}>
-                                <Text style={styles.removeButtonText}>X</Text>
-                            </TouchableOpacity>
-                        </View>
-                    ))}
-                </>
-            ) : (
-                <Text style={styles.noRecipesText}>No recipes saved for {parsedDate.toLocaleDateString('en-US', { weekday: 'long' })} {parsedDate.getDate()}.</Text>
-            )}
-        </View>
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+            <View style={styles.container}>
+                {savedRecipes.length > 0 ? (
+                    <>
+                        <Text style={styles.sectionTitle}>Your saved recipes for {parsedDate.toLocaleDateString('en-US', { weekday: 'long' })} {parsedDate.getDate()}:</Text>
+                        {savedRecipes.map((recipe, index) => (
+                            <View key={index} style={styles.recipeItem}>
+                                <View style={styles.recipeTitleContainer}>
+                                    <TouchableOpacity onPress={() => navigateToRecipe(recipe.recipeId)}>
+                                        <Text style={styles.recipeTitle}>{recipe.recipeTitle}</Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <TouchableOpacity onPress={() => removeRecipe(recipe.recipeId, parsedDate.toDateString())} style={styles.removeButton}>
+                                    <Text style={styles.removeButtonText}>X</Text>
+                                </TouchableOpacity>
+                            </View>
+                        ))}
+                    </>
+                ) : (
+                    <Text style={styles.noRecipesText}>No recipes saved for {parsedDate.toLocaleDateString('en-US', { weekday: 'long' })} {parsedDate.getDate()}.</Text>
+                )}
+            </View>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
+    scrollViewContent: {
+        flexGrow: 1,
+    },
     container: {
         flex: 1,
         padding: 20,
@@ -110,19 +117,25 @@ const styles = StyleSheet.create({
     sectionTitle: {
         fontSize: 20,
         marginBottom: 20,
+        fontWeight: 'bold',
     },
     recipeItem: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderWidth: 1,
-        borderColor: 'black',
-        padding: 10,
         marginBottom: 10,
+    },
+    recipeTitleContainer: {
+        flex: 1,
     },
     recipeTitle: {
         fontSize: 20,
         textDecorationLine: 'underline',
+        fontWeight: '500',
+        backgroundColor: "#c5ee7d",
+        borderRadius: 10,
+        padding: 10,
+        marginRight: 10,
     },
     removeButton: {
         backgroundColor: 'red',
