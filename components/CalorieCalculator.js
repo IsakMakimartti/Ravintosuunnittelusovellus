@@ -1,5 +1,5 @@
 import { useState, useEffect, React } from "react";
-import { StyleSheet, Text, View, FlatList, SafeAreaView } from "react-native";
+import { StyleSheet, Text, View, FlatList, SafeAreaView, Image } from "react-native";
 import { Button } from 'react-native-paper';
 import { useRoute } from '@react-navigation/native';
 import Searchbar from "./Searchbar";
@@ -8,14 +8,21 @@ export default function CalorieCalculator() {
   const [calories, setCalories] = useState(0)
   const [showSearchbar, setShowSearchbar] = useState(false)
   const [recipes, setRecipes] = useState([]);
+  const [nutrients, setNutrients] = useState({});
+  const [showNutrients, setShowNutrients] = useState(false);
 
   const route = useRoute()
 
   // Default value is an empty array, otherwise assigns the values from route.params
   const { newRecipe = {} } = route.params || {};
+  const { newUserRecipe = {} } = route.params || {};
 
   const toggleSearchbar = () => {
     setShowSearchbar(!showSearchbar)
+  }
+
+  const toggleNutrients = () => {
+    setShowNutrients(!showNutrients)
   }
 
   useEffect(() => {
@@ -24,23 +31,92 @@ export default function CalorieCalculator() {
       setRecipes(prevRecipes => [...prevRecipes, newRecipe]);
       // Sums calories to previous the previous value
       setCalories(prevCalories => prevCalories + newRecipe.calories)
+      // Checks if there is a previous recipe and then sums the nutrients of newRecipe
+      setNutrients(prevNutrients => ({
+        fat: {
+          quantity: (prevNutrients.fat?.quantity ?? 0) + newRecipe.fat.quantity,
+          unit: newRecipe.fat.unit
+        },
+        carbs: {
+          quantity: (prevNutrients.carbs?.quantity ?? 0) + newRecipe.carbs.quantity,
+          unit: newRecipe.carbs.unit
+        },
+        protein: {
+          quantity: (prevNutrients.protein?.quantity ?? 0) + newRecipe.protein.quantity,
+          unit: newRecipe.protein.unit
+        }
+      }));
+      setShowSearchbar(false)
     }
   }, [newRecipe]);
-  
+
+  useEffect(() => {
+    if (newUserRecipe && newUserRecipe.title) {
+      // Adds the new user recipe to the recipes state
+      setRecipes(prevRecipes => [...prevRecipes, newUserRecipe]);
+      // Sums calories to previous the previous value
+      setCalories(prevCalories => prevCalories + newUserRecipe.calories)
+      // Checks if there is a previous user recipe and then sums the nutrients of newRecipe
+      setNutrients(prevNutrients => ({
+        fat: {
+          quantity: (prevNutrients.fat?.quantity ?? 0) + newUserRecipe.fat.quantity,
+          unit: newUserRecipe.fat.unit
+        },
+        carbs: {
+          quantity: (prevNutrients.carbs?.quantity ?? 0) + newUserRecipe.carbs.quantity,
+          unit: newUserRecipe.carbs.unit
+        },
+        protein: {
+          quantity: (prevNutrients.protein?.quantity ?? 0) + newUserRecipe.protein.quantity,
+          unit: newUserRecipe.protein.unit
+        }
+      }));
+      setShowSearchbar(false)
+    }
+  }, [newUserRecipe]);
+
   const renderRecipeItem = ({ item }) => (
     <View style={styles.item}>
-      <Text style={styles.title}>{item.title}</Text>
+      <View style={styles.rowContainer}>
+        <View style={styles.textContainer}>
+          <Text style={styles.title}>{item.title}</Text>
+        </View>
+        <View style={styles.imageContainer}>
+          <Image
+            source={{ uri: item.image }}
+            style={styles.image}
+            resizeMode="cover"
+          />
+        </View>
+      </View>
     </View>
   )
 
-  const header = "Total calories: " + calories
+  const header = "Total calories: " + calories.toFixed(0)
 
   return (
     <SafeAreaView style={styles.container}>
       {!showSearchbar && (
         <>
           <View style={styles.headerItem}>
-            <Text style={styles.title}>{header}</Text>
+            <View style={styles.headerContainer}>
+              <Text style={styles.headerTitle}>{header}</Text>
+              <Button
+                textColor="#000000"
+                style={styles.toggleButton}
+                onPress={toggleNutrients}
+                mode="contained"
+                icon={showNutrients ? "minus" : "plus"}>
+                {showNutrients ? "Hide" : "Show"} Nutrients
+              </Button>
+            </View>
+            {showNutrients && (
+              <View style={styles.nutrientsContainer}>
+                <Text>Fat: {nutrients?.fat?.quantity?.toFixed(0) ?? 0} {nutrients?.fat?.unit}</Text>
+                <Text>Carbs: {nutrients?.carbs?.quantity?.toFixed(0) ?? 0} {nutrients?.fat?.unit}</Text>
+                <Text>Protein: {nutrients?.protein?.quantity?.toFixed(0) ?? 0} {nutrients?.fat?.unit}</Text>
+              </View>
+            )}
           </View>
           <FlatList
             data={recipes}
@@ -104,9 +180,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderColor: '#000000'
   },
-  title: {
+  headerTitle: {
     fontSize: 32,
-    textAlign: 'center',
+    textAlign: 'left',
+    color: '#000000'
+  },
+  title: {
+    fontSize: 24,
+    textAlign: 'left',
     color: '#000000'
   },
   addButtonContainer: {
@@ -132,6 +213,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
   },
-  searchbar: {
+  nutrientsContainer: {
+    marginTop: 10
+  },
+  toggleButton: {
+    marginTop: 10,
+    backgroundColor: '#c5ee7d',
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  imageContainer: {
+    width: 100,
+    height: 100,
+    marginRight: 10,
+  },
+  image: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
+  },
+  textContainer: {
+    flex: 1,
+    marginLeft: 10,
+    justifyContent: 'center',
   }
 });

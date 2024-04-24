@@ -6,6 +6,7 @@ import Recipebuilder from './components/Recipebuilder';
 import RecipePage from './components/RecipePage'
 import Footer from './components/Footer'
 import Calendar from './components/Calendar';
+import DateDetails from './components/DateDetails';
 import CalorieCalculator from './components/CalorieCalculator';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -26,11 +27,21 @@ export default function App() {
             title: "RSS",
           }}
         >
-           <Stack.Screen
+
+          <Stack.Screen
             name="Home"
             component={Mainmenu}
           />
-             <Stack.Screen
+          <Stack.Screen
+            name="Search"
+            component={Searchpage}
+            options={({ route }) => ({
+              title: "Search",
+              headerTitle: route.Searchpage,
+            })}
+          >
+          </Stack.Screen>
+          <Stack.Screen
             name="Recipebuilder"
             component={Recipebuilder}
             options={({ route }) => ({
@@ -38,22 +49,22 @@ export default function App() {
               headerTitle: route.Recipebuilder,
             })}
           />
-             <Stack.Screen
-            name="Search"
-            component={Searchpage}
-            options={({ route }) => ({
-              title: "Search",
-              headerTitle: route.Searchpage,
-            })}
-          />
-        <Stack.Screen
+          <Stack.Screen
           name="Calendar"
           component={Calendar}
           options={({ route }) => ({
             title: "Calendar", 
             headerTitle: route.Calendar, 
           })}
-        />
+          />
+          <Stack.Screen
+            name="DateDetails"
+            component={DateDetails}
+            options={({ route }) => ({
+              title: "DateDetails",
+              headerTitle: route.DateDetails,
+            })}
+          />
           <Stack.Screen
             name="Recipe"
             component={RecipePage}
@@ -61,7 +72,7 @@ export default function App() {
               title: "Recipe",
               headerTitle: route.RecipePage,
             })}
-          /> 
+          />
           <Stack.Screen
             name="Calculator"
             component={CalorieCalculator}

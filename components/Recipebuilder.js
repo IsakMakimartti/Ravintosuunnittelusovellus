@@ -1,4 +1,4 @@
-import { Text, View, TextInput, StyleSheet, Pressable, Image, ScrollView,Modal } from 'react-native';
+import { Text, View, TextInput, StyleSheet, Pressable, Image, ScrollView,Modal,Button } from 'react-native';
 import { useState } from 'react';
 import IngredientAdder from "./IngredientAdder"
 import { firestore,collection,addDoc,userrecipes, query, onSnapshot } from '../firebase/Config';
@@ -17,10 +17,44 @@ export default function Recipebuilder() {
         setJsonArray(array)
         IngredientJsonArray.forEach((value, index)  => {
             console.log(index+1)
-            console.log(value.ingredient)
-        })
+                console.log(value.ingredient)
+            })
     }
     handleFinnish = async() => {
+        let arrayof = []; 
+        let array; 
+        IngredientJsonArray.forEach(async (value, index) => {
+            let response = ""
+                console.log(value.ingredient.amount + value.ingredient.measurement + "%20" + value.ingredient.name)
+                let url = "https://api.edamam.com/api/nutrition-data?app_id="+process.env.nutapp_id+"&app_key="+process.env.nutapp_key+"&nutrition-type=cooking&ingr=1l%20milk" + value.ingredient.amount + value.ingredient.measurement + "%20" + value.ingredient    .name
+               await fetch(url)
+                 .then(async res => response = await res.json())
+                array = (
+                    {
+                    "data" : 
+                        {
+                         "calories" : 
+                          response.calories
+                         ,
+                         "fat" : {
+                          amount : response.totalNutrients.FAT.quantity,  
+                          unit : response.totalNutrients.FAT.unit
+                         }
+                         ,
+                         "carbohydrates" : {
+                         amount : response.totalNutrients.CHOCDF.quantity,  
+                         unit : response.totalNutrients.CHOCDF.unit
+                         },
+                         "protein": {
+                            amount : response.totalNutrients.PROCNT.quantity,  
+                            unit : response.totalNutrients.PROCNT.unit,  
+                         }
+                        }
+                }
+            )
+            console.log(response.calories)
+            arrayof.push(array)
+        })
         capitalizeLetter = (string) => {
             if(string !== string.toLowerCase){
             return string.toLowerCase()   
@@ -45,28 +79,58 @@ export default function Recipebuilder() {
      setUsername("")
      setInstructions("")
      setJsonArray([])
+
      setKey(Math.random())
      const save = async() => {
+        let tempcalories = 0; 
+        let tempfat = 0; 
+        let tempcarbohydrates = 0;
+        let tempprotein = 0;
+        arrayof.forEach(value =>{
+                tempcalories += value.data.calories
+                tempfat += value.data.fat.amount
+                tempcarbohydrates += value.data.carbohydrates.amount
+                tempprotein += value.data.protein.amount
+         })
+         let temparray = (
+            {
+            "data" : 
+                {
+                 "calories" : 
+                 tempcalories
+                 ,
+                 "fat" : {
+                  amount : tempfat,  
+                  unit : "g"
+                 }
+                 ,
+                 "carbohydrates" : {
+                 amount : tempcarbohydrates,  
+                 unit : "g"
+                 },
+                 "protein": {
+                    amount : tempprotein,
+                    unit : "g"
+                 }
+                }
+        }
+    )
         const docRef = await addDoc(collection(firestore, userrecipes),{
           username: username,
           name: recipeName,
           ingredients: IngredientJsonArray,
           instructions: recipeInstructions,
           keywords: keywordarray,
+          nutrition: temparray,
         }).catch(error => console.log(error))
         console.log('Message saved')
+        alert(true)
+        setTimeout(()=>{alert(false)},2000)
       }
-      await save()
-      setalert(!alert)
-      setTimeout(() => {
-          setalert(false)
-      }, 4000)
-    } else {
-      setAccepted(false)
-      setTimeout(() => setModal(false) + setAccepted(true), 4000)
+      setTimeout(()=>{save()},2000)
+      setKey(Math.random())
     }
-    
-    }
+}
     
     return (
         <ScrollView>
@@ -88,8 +152,8 @@ export default function Recipebuilder() {
                 </View>
             </View>
             <View style={styles.addedcontainers}>
-                <Pressable style={styles.pressable} onPress={() => setModal(!modal)}>
-                    <Text>Finnish Recipe</Text>
+                <Pressable style={({pressed})=> ({opacity: pressed ? 0.5 : 1, alignItems:"center"})}  onPress={() => setModal(!modal)}>
+                    <Text>Finish Recipe</Text>
                 </Pressable>
                 <Modal visible={modal} onRequestClose={() => setModal(!modal)} transparent={true} animationType={"slide"}>
                     <View style={styles.modal}>
@@ -97,10 +161,10 @@ export default function Recipebuilder() {
                         <View style={styles.query}>
                             <Text style={{fontSize: 30, padding: 20}}>Complete Recipe?</Text> 
                             <View style={styles.querybuttons}>
-                                <Pressable onPress={() => handleFinnish()} style={{padding: 5, backgroundColor: "#7CFC00", alignItems:"center"}}>
+                                <Pressable onPress={() => handleFinnish()} style={({pressed})=> ({opacity: pressed ? 0.5 : 1 , padding: 5, backgroundColor: "#7CFC00", alignItems:"center"})}>
                                     <Text style={{fontSize: 20}}>Accept</Text>
                                 </Pressable>
-                                <Pressable style={{padding: 5, backgroundColor: "#FF5733", alignItems:"center"}}>
+                                <Pressable style={({pressed})=> ({opacity: pressed ? 0.5 : 1 ,padding: 5, backgroundColor: "#FF5733", alignItems:"center"})}>
                                     <Text onPress={() => setModal(!modal)} style={{fontSize: 20}}>Cancel</Text>
                                 </Pressable>
                             </View>
@@ -154,10 +218,6 @@ const styles = StyleSheet.create({
     },
     instructions: {
         width: "100%",
-    },
-    pressable: {
-        width: "40%",
-        alignItems: "center",
     },
     addedcontainers: {
         backgroundColor: "#c5ee7d",
